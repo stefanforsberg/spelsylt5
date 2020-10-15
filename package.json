@@ -1,0 +1,17 @@
+{
+  "name": "spelsylt5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html -p 8080",
+    "build": "parcel build index.html --public-url ./",
+    "extrude": "tile-extruder --tileWidth 16 --tileHeight 16 --input ./img/minetileset.png --output ./dist/img/minetileset-extruded.png"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mikewesthad/dungeon": "^2.0.1",
+    "phaser": "^3.24.1"
+  }
+}
