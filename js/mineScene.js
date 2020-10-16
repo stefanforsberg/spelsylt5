@@ -50,6 +50,7 @@ export default class DungeonScene extends Phaser.Scene {
     this.dungeon = new Dungeon({
       width: 50,
       height: 50,
+      doorPadding: 2,
       rooms: {
         width: { min: 5, max: 11 },
         height: { min: 5, max: 11 },
@@ -72,12 +73,21 @@ export default class DungeonScene extends Phaser.Scene {
     this.gemStoneLayer = map.createBlankDynamicLayer("GemStone", tileset);
     this.gemStoneLayer.fill(-1);
 
+    this.exitLayer = map.createBlankDynamicLayer("Exit", tileset);
+    this.exitLayer.fill(-1);
+
+    const startRoom = this.dungeon.rooms[0];
+    this.gemLayer.putTileAt(19, startRoom.right-1, startRoom.top+1);
+    this.gemLayer.putTileAt(9, startRoom.right-1, startRoom.top);
+
+    
+    console.log(startRoom)
+
     const rooms = this.dungeon.rooms.slice();
     rooms.shift();
     rooms.forEach(r => {
       var rand = Math.random();
       if (rand <= 0.5) {
-        // 25% chance of chest
         this.gemLayer.putTileAt(18, r.centerX, r.centerY);
       } else {
         this.gemStoneLayer.putTileAt(8, r.centerX, r.centerY);
