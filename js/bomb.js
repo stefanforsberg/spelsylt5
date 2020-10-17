@@ -27,7 +27,7 @@ export default class Bomb {
         callback: () => {this.destroy()},
         callbackScope: this,
         loop: false
-    });
+      });
   
     }
   
@@ -57,7 +57,27 @@ export default class Bomb {
   
     destroy() {
       this.scene.events.emit('bombExplode', {x: this.sprite.x, y: this.sprite.y} );
+
+      const emitter = this.scene.add.particles('smoke').createEmitter({
+        x: this.sprite.x,
+        y: this.sprite.y,
+        speed: 10,
+        angle: { min: 0, max: 360 },
+        scale: { start: 1, end: 3 },
+        alpha: { start: 0.4, end: 0 },
+        blendMode: 'NORMAL',
+        lifespan: 400,
+        gravityY:  0
+      });
+
       this.sprite.destroy();
+
+      this.scene.time.addEvent({
+        delay: 300,
+        callback: () => {emitter.stop();},
+        callbackScope: this,
+        loop: false
+      });
     }
   }
   

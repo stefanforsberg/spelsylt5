@@ -1,5 +1,7 @@
 import Phaser from "phaser";
+import MainScene from "./mainScene.js";
 import MineScene from "./mineScene.js";
+
 
 const config = {
   type: Phaser.AUTO,
@@ -8,7 +10,7 @@ const config = {
   backgroundColor: "#000",
   parent: "game",
   pixelArt: true,
-  scene: MineScene,
+  scene: [MainScene, MineScene],
   physics: {
     default: "arcade",
     arcade: {

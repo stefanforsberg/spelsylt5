@@ -1,52 +1,45 @@
 import Phaser from "phaser";
 import Dungeon from "@mikewesthad/dungeon";
 import Player from "./player.js";
-import MineVisibility from './MineVisibility.js';
-
+import MineVisibility from "./MineVisibility.js";
 
 /**
  * Scene that generates a new dungeon
  */
-export default class DungeonScene extends Phaser.Scene {
+export default class MineScene extends Phaser.Scene {
+  constructor() {
+    super({
+      key: "MineScene",
+    });
+  }
+
   preload() {
+    console.log("coming");
     this.load.image("tiles", "../img/minetileset-extruded.png");
-    this.load.spritesheet(
-      "characters",
-      "../img/gubbe2.png",
-      {
-        frameWidth: 16,
-        frameHeight: 16,
-        margin: 0,
-        spacing: 0
-      }
-    );
+    this.load.image("smoke", "../img/smoke.png");
+    this.load.spritesheet("characters", "../img/gubbe2.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+      margin: 0,
+      spacing: 0,
+    });
 
-    this.load.spritesheet(
-      "bomb",
-      "../img/bomb.png",
-      {
-        frameWidth: 16,
-        frameHeight: 16,
-        margin: 0,
-        spacing: 0
-      }
-    );
+    this.load.spritesheet("bomb", "../img/bomb.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+      margin: 0,
+      spacing: 0,
+    });
 
-    this.load.spritesheet(
-      "axe",
-      "../img/yxa.png",
-      {
-        frameWidth: 16,
-        frameHeight: 16,
-        margin: 0,
-        spacing: 0
-      }
-    );
-
+    this.load.spritesheet("axe", "../img/yxa.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+      margin: 0,
+      spacing: 0,
+    });
   }
 
   create() {
-
     this.dungeon = new Dungeon({
       width: 50,
       height: 50,
@@ -54,17 +47,17 @@ export default class DungeonScene extends Phaser.Scene {
       rooms: {
         width: { min: 5, max: 11 },
         height: { min: 5, max: 11 },
-        maxRooms: 5
-      }
+        maxRooms: 5,
+      },
     });
 
     const map = this.make.tilemap({
       tileWidth: 16,
       tileHeight: 16,
       width: this.dungeon.width,
-      height: this.dungeon.height
+      height: this.dungeon.height,
     });
-    const tileset = map.addTilesetImage("tiles", null, 16, 16, 1, 2); 
+    const tileset = map.addTilesetImage("tiles", null, 16, 16, 1, 2);
     this.groundLayer = map.createBlankDynamicLayer("Ground", tileset);
 
     this.gemLayer = map.createBlankDynamicLayer("Gems", tileset);
@@ -77,47 +70,52 @@ export default class DungeonScene extends Phaser.Scene {
     this.exitLayer.fill(-1);
 
     const startRoom = this.dungeon.rooms[0];
-    this.gemLayer.putTileAt(19, startRoom.right-1, startRoom.top+1);
-    this.gemLayer.putTileAt(9, startRoom.right-1, startRoom.top);
-
-    
-    console.log(startRoom)
+    this.exitLayer.putTileAt(19, startRoom.right - 1, startRoom.top + 1);
+    this.exitLayer.putTileAt(9, startRoom.right - 1, startRoom.top);
 
     const rooms = this.dungeon.rooms.slice();
     rooms.shift();
-    rooms.forEach(r => {
+    rooms.forEach((r) => {
       var rand = Math.random();
       if (rand <= 0.5) {
         this.gemLayer.putTileAt(18, r.centerX, r.centerY);
       } else {
         this.gemStoneLayer.putTileAt(8, r.centerX, r.centerY);
       }
-    })
+    });
 
-    this.gemStoneLayer.setCollision(8)
+    this.gemStoneLayer.setCollision(8);
 
-
-    const mappedTiles = this.dungeon.getMappedTiles({ empty: -1, floor: 13, door: 13, wall: 2 });
+    const mappedTiles = this.dungeon.getMappedTiles({
+      empty: -1,
+      floor: 13,
+      door: 13,
+      wall: 2,
+    });
     this.groundLayer.putTilesAt(mappedTiles, 0, 0);
     this.groundLayer.setCollision(2); // wall collision
 
-
-    this.player = new Player(this, map.widthInPixels / 2, map.heightInPixels / 2);
-
-    
+    this.player = new Player(
+      this,
+      map.widthInPixels / 2,
+      map.heightInPixels / 2
+    );
 
     this.physics.add.collider(this.player.sprite, this.groundLayer);
-    
+
     this.physics.add.collider(this.player.sprite, this.gemStoneLayer);
 
     this.gemLayer.setTileIndexCallback(18, this.collectGem, this);
 
+    this.exitLayer.setTileIndexCallback(19, this.exitLevel, this);
+
     this.physics.add.overlap(this.player.sprite, this.gemLayer);
+
+    this.physics.add.overlap(this.player.sprite, this.exitLayer);
 
     const shadowLayer = map.createBlankDynamicLayer("Fog", tileset).fill(0);
 
     this.mineVisibility = new MineVisibility(shadowLayer);
-
 
     const camera = this.cameras.main;
     camera.startFollow(this.player.sprite);
@@ -132,33 +130,36 @@ export default class DungeonScene extends Phaser.Scene {
     //   })
     //   .setScrollFactor(0);
 
+    this.cameras.main.setZoom(3);
 
-      this.cameras.main.setZoom(3);
-
-      this.events.on('bombExplode', (bomb) => {
-        console.log("bomb exploded " + bomb.x)
+    this.events.on(
+      "bombExplode",
+      (bomb) => {
+        console.log("bomb exploded " + bomb.x);
 
         const tileX = this.groundLayer.worldToTileX(bomb.x);
         const tileY = this.groundLayer.worldToTileY(bomb.y);
 
-        var tileAt = this.gemStoneLayer.getTileAt(tileX,tileY)
+        var tileAt = this.gemStoneLayer.getTileAt(tileX, tileY);
 
-        if(tileAt && tileAt.index === 8) {
+        if (tileAt && tileAt.index === 8) {
           this.gemStoneLayer.putTileAt(-1, tileX, tileY);
           this.gemLayer.putTileAt(18, tileX, tileY);
         }
-        
+      },
+      this
+    );
+  }
 
-        
-      }, this);
-
+  exitLevel() {
+    this.scene.stop();
+    this.scene.resume('MainScene');
   }
 
   collectGem(player, tile) {
-    
     this.gemLayer.removeTileAt(tile.x, tile.y);
 
-    console.log("Took gem")
+    console.log("Took gem");
   }
 
   update(time, delta) {
@@ -169,6 +170,5 @@ export default class DungeonScene extends Phaser.Scene {
     const playerRoom = this.dungeon.getRoomAt(playerTileX, playerTileY);
 
     this.mineVisibility.setActiveRoom(playerRoom);
-    
   }
 }

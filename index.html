@@ -22,13 +22,44 @@
 			align-items: center;
 			justify-content: center;
 		}
+
+		#menu {
+			position: absolute;
+			min-width: 100vw;
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		select, button {
+			font-size: 20px;
+		}
+		
 	</style>
 
 </head>
 
 <body>
 
-  <div id="game"></div>
+  	<div id="game">
+
+		<div id="menu">
+			<div style="width: 800px; height: 600px; display: flex; justify-content: center;">
+				
+				<div  style="margin-top: 410px">
+					<select>
+						<option>Depth 100</option>
+						<option>Depth 200</option>
+						<option>Depth 300</option>
+						<option>Depth 400</option>
+					</select>
+
+					<button id="go">GO</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
     <script src="js/index.js"></script>
 </body>

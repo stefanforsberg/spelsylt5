@@ -21,8 +21,8 @@ export default class Player {
   
       this.sprite = scene.physics.add
         .sprite(x, y, "characters", 0)
-        .setSize(11, 14)
-        .setOffset(3, 1);
+        .setSize(7, 7)
+        .setOffset(5, 8);
   
       this.sprite.anims.play("player-walk-back");
   
