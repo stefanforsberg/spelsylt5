@@ -4,6 +4,10 @@ import Bomb from "./bomb.js";
 export default class Player {
     constructor(scene, x, y) {
       this.scene = scene;
+
+      this.inventory = {
+        iron: 0
+      }
   
       const anims = scene.anims;
       anims.create({
@@ -14,7 +18,13 @@ export default class Player {
       });
       anims.create({
         key: "player-walk-back",
-        frames: anims.generateFrameNumbers("characters", { start: 8, end: 16 }),
+        frames: anims.generateFrameNumbers("characters", { start: 8, end: 15 }),
+        frameRate: 16,
+        repeat: -1
+      });
+      anims.create({
+        key: "player-walk-right",
+        frames: anims.generateFrameNumbers("characters", { start: 16, end: 23 }),
         frameRate: 16,
         repeat: -1
       });
@@ -36,6 +46,13 @@ export default class Player {
     freeze() {
       this.sprite.body.moves = false;
     }
+
+    pickUpGem(type, amount) {
+      
+      this.inventory[type] += amount;
+      console.log( `${this.inventory[type]} ${type}`)
+      document.getElementById(type).innerText = `${this.inventory[type]} ${type}`
+    }
   
     update() {
       const keys = this.keys;
@@ -46,8 +63,10 @@ export default class Player {
       sprite.body.setVelocity(0);
   
       if (keys.left.isDown) {
+        sprite.setFlipX(true);
         sprite.body.setVelocityX(-speed);
       } else if (keys.right.isDown) {
+        sprite.setFlipX(false);
         sprite.body.setVelocityX(speed);
       }
   
@@ -58,17 +77,19 @@ export default class Player {
       }
 
       if(Phaser.Input.Keyboard.JustDown(this.keySpace)) {
-        console.log("s") 
         new Bomb(this.scene, sprite.x , sprite.y - sprite.height);
       }
   
       sprite.body.velocity.normalize().scale(speed);
   
-      if (keys.left.isDown || keys.right.isDown || keys.down.isDown) {
+      if (keys.down.isDown) {
         sprite.anims.play("player-walk", true);
       } else if (keys.up.isDown) {
         sprite.anims.play("player-walk-back", true);
-      } else {
+      } else if(keys.left.isDown || keys.right.isDown) {
+        sprite.anims.play("player-walk-right", true);
+      }
+      else {
         sprite.anims.stop();
   
         if (prevVelocity.y < 0) {

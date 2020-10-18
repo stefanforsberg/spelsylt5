@@ -59,7 +59,7 @@ export default class MainScene extends Phaser.Scene {
     let i = 0;
     for (var z = 0; z < 10; z++) {
       this.time.addEvent({
-        delay: z * 300,
+        delay: z * 600,
         callback: () => {
           i++;
 
@@ -72,33 +72,34 @@ export default class MainScene extends Phaser.Scene {
           const emitterNl = this.add.particles("nl").createEmitter({
             x: 0,
             y: 0,
-            alpha: { start: 0.01, end: 0 },
-            blendMode: "ADD",
-            lifespan: 7000,
+            alpha: { start: 0.00, end: 0.01 },
+            blendMode: "NORMAL",
+            lifespan: 9000,
             gravityX: 3,
-            gravityY: -5,
+            gravityY: -2,
           });
 
           emitterNl.startFollow(nl);
 
           this.tweens.add({
             targets: nl,
-            y: { value: 120, duration: 5000, ease: "Sine" },
-            yoyo: true,
+            y: { value: 120, duration: 8000, ease: "Sine" },
+            yoyo: false,
             loop: -1,
             onLoop: () => {
               emitterNl.gravityX = emitterNl.gravityX * -1;
+              emitterNl.gravityY = emitterNl.gravityY * -1;
             },
           });
 
           const emitterNlp = this.add.particles("nlp").createEmitter({
             x: 0,
             y: 0,
-            alpha: { start: 0.02, end: 0 },
-            blendMode: "ADD",
-            lifespan: 7000,
-            gravityX: 3,
-            gravityY: -5,
+            alpha: { start: 0.00, end: 0.02 },
+            blendMode: "NORMAL",
+            lifespan: 5000,
+            gravityX: 2,
+            gravityY: -3,
           });
 
           emitterNlp.startFollow(nlp);
@@ -106,7 +107,7 @@ export default class MainScene extends Phaser.Scene {
           this.tweens.add({
             targets: nlp,
             y: { value: 220, duration: 7000, ease: "Sine" },
-            yoyo: true,
+            yoyo: false,
             loop: -1,
             onLoop: () => {
               emitterNlp.gravityX = emitterNlp.gravityX * -1;
