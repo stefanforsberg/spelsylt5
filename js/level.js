@@ -101,7 +101,6 @@ export default class Level {
         
       } else {
           console.log("not stone")
-        // this.gemStoneLayer.putTileAt(8, r.centerX, r.centerY);
       }
     });
   }

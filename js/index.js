@@ -10,7 +10,7 @@ const config = {
   backgroundColor: "#000",
   parent: "game",
   pixelArt: true,
-  scene: [MineScene, MainScene],
+  scene: [MainScene, MineScene, ],
   physics: {
     default: "arcade",
     arcade: {

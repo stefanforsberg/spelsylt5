@@ -8,6 +8,7 @@ import Level from "./level.js"
  */
 export default class MineScene extends Phaser.Scene {
   constructor() {
+    
     super({
       key: "MineScene",
     });
@@ -39,17 +40,53 @@ export default class MineScene extends Phaser.Scene {
     });
   }
 
-  create() {
+  create(gameSettings) {
+    this.gameSettings = gameSettings;
+    console.log(this.gameSettings)
     this.level = new Level().create(this);
 
-
+    this.previousTime = 0;
 
     this.cameras.main.setZoom(3);
+
+    this.timer = this.time.addEvent({
+      delay: this.gameSettings.oxygenTimer*1000,
+      callback: this.endLevel,
+      callbackScope: this,
+      loop: false
+    });
+   
+  }
+
+  endLevel() {
+
+    this.level.player.freeze();
+    const cam = this.cameras.main;
+    cam.fade(250, 0, 0, 0);
+    cam.once("camerafadeoutcomplete", () => {
+      this.gameSettings.ui.death.style.display = 'flex';
+      this.gameSettings.ui.mine.style.display = 'none';
+
+      this.input.keyboard.on('keydown', () => {
+        this.scene.stop();
+        this.scene.resume("MainScene");
+      })
+     
+    });
+    
+    console.log("end level")
 
     
   }
 
   update(time, delta) {
     this.level.update();
+
+    const currentTime = Math.floor(this.timer.getElapsedSeconds());
+
+    if(currentTime > this.previousTime) {
+      this.previousTime = currentTime;
+      document.getElementById("oxygen").innerText = `Oxygen: ${(this.gameSettings.oxygenTimer - currentTime)} sec`
+    }
   }
 }

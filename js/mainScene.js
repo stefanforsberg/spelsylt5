@@ -31,6 +31,16 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+    
+    this.gameSettings = {
+        oxygenTimer: 3,
+        ui: {
+            death: document.getElementById("death"),
+            menu: document.getElementById("menu"),
+            mine: document.getElementById("mine")
+        }
+    }
+    
     this.add.image(400, 300, "title");
 
     this.createSnow();
@@ -40,17 +50,20 @@ export default class MainScene extends Phaser.Scene {
     this.setupMenu();
 
     this.events.on('pause', () => {
-        document.getElementById("menu").style.display = 'none';
+        this.gameSettings.ui.menu.style.display = 'none';
+        this.gameSettings.ui.mine.style.display = 'flex';
     });
 
     this.events.on('resume', () => {
-        document.getElementById("menu").style.display = 'flex';
+        this.gameSettings.ui.menu.style.display = 'flex';
+        this.gameSettings.ui.mine.style.display = 'none';
+        this.gameSettings.ui.death.style.display = 'none';
     });
   }
 
   setupMenu() {
     document.getElementById("go").addEventListener("click", () => {
-      this.scene.launch("MineScene");
+      this.scene.launch("MineScene", this.gameSettings);
       this.scene.pause();
     });
   }
@@ -88,7 +101,6 @@ export default class MainScene extends Phaser.Scene {
             loop: -1,
             onLoop: () => {
               emitterNl.gravityX = emitterNl.gravityX * -1;
-              emitterNl.gravityY = emitterNl.gravityY * -1;
             },
           });
 
