@@ -24,6 +24,8 @@ export default class Level {
       this.map.heightInPixels / 2
     );
 
+    this.player.inventory.bomb = this.scene.gameSettings.inventory.bomb;
+
     this.scene.physics.add.collider(this.player.sprite, this.groundLayer);
 
     this.scene.physics.add.collider(this.player.sprite, this.gemStoneLayer);
@@ -40,8 +42,6 @@ export default class Level {
   }
 
   explodingBomb(bomb) {
-    console.log("bomb exploded " + bomb.x);
-    console.log(this.groundLayer);
 
     const tileX = this.groundLayer.worldToTileX(bomb.x);
     const tileY = this.groundLayer.worldToTileY(bomb.y);
@@ -65,12 +65,19 @@ export default class Level {
   }
 
   exitLevel() {
-    this.scene.stop();
-    this.scene.resume("MainScene");
+    this.scene.scene.stop();
+
+    const mainScene = this.scene.scene.get("MainScene")
+
+    Object.keys(mainScene.gameSettings.inventory).forEach(k => {
+      mainScene.gameSettings.inventory[k] += this.player.inventory[k];
+    })
+
+    mainScene.updateMenu();
+    this.scene.scene.resume("MainScene");
   }
 
   collectGem(player, tile) {
-    console.log(tile);
     this.gemLayer.removeTileAt(tile.x, tile.y);
     this.player.pickUpGem(tile.properties.type, tile.properties.amount);
   }
@@ -212,7 +219,7 @@ export default class Level {
     const startRoom = this.dungeon.rooms[0];
     this.exitLayer.putTileAt(19, startRoom.right - 1, startRoom.top + 1);
     this.exitLayer.putTileAt(9, startRoom.right - 1, startRoom.top);
-    this.exitLayer.setTileIndexCallback(19, this.exitLevel, this.scene);
+    this.exitLayer.setTileIndexCallback(19, this.exitLevel, this);
 
     const mappedTiles = this.dungeon.getMappedTiles({
       empty: -1,

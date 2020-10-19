@@ -39,7 +39,16 @@ export default class MainScene extends Phaser.Scene {
             menu: document.getElementById("menu"),
             mine: document.getElementById("mine"),
             levelSelect: document.getElementById("levelSelect"),
-            go: document.getElementById("go")
+            go: document.getElementById("go"),
+            title: document.getElementById("title")
+        },
+        inventory: {
+          iron: 0,
+          red: 0,
+          yellow: 0,
+          blue: 0,
+          diamond: 0,
+          bomb: 5
         }
     }
     
@@ -53,6 +62,7 @@ export default class MainScene extends Phaser.Scene {
 
     this.events.on('pause', () => {
         this.gameSettings.ui.menu.style.display = 'none';
+        this.gameSettings.ui.title.style.display = 'none';
         this.gameSettings.ui.mine.style.display = 'flex';
     });
 
@@ -69,6 +79,15 @@ export default class MainScene extends Phaser.Scene {
       this.scene.launch("MineScene", this.gameSettings);
       this.scene.pause();
     });
+  }
+
+  updateMenu() {
+    Object.keys(this.gameSettings.inventory).forEach(k => {
+      const e = document.getElementById("inv-" + k);
+      if(e) {
+        e.innerText = this.gameSettings.inventory[k];
+      }
+    })
   }
 
   createNorthernLights() {

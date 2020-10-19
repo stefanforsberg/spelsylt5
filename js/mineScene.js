@@ -39,6 +39,8 @@ export default class MineScene extends Phaser.Scene {
       spacing: 0,
     });
 
+    
+
   }
 
   create(gameSettings) {
@@ -80,6 +82,8 @@ export default class MineScene extends Phaser.Scene {
 
     
   }
+
+
 
   update(time, delta) {
     this.level.update();

@@ -7,12 +7,15 @@
 
   <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
 
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
   <style>
 		html,
 		body,
 		#game {
 			margin: 0;
 			padding: 0;
+			font-family: 'Press Start 2P', cursive;
 		}
 
 		#game {
@@ -54,7 +57,12 @@
 		}
 
 		select, button {
-			font-size: 20px;
+			font-size: 16px;
+			background-color: white;
+			color: black;
+			border: solid 1px white;
+			font-family: 'Press Start 2P', cursive;
+			padding: 3px;
 		}
 
 		#inventory, #oxygen {
@@ -71,6 +79,15 @@
 			height: 600px; 
 			display: flex; 
 			justify-content: center;
+			flex-flow: wrap;
+		}
+
+		.inv {
+			float: right;
+		}
+
+		hr {
+			margin: 16px 0;
 		}
 
 	</style>
@@ -81,19 +98,54 @@
 
   	<div id="game">
 
-		<div id="menu" class="overlay">
-			<div class="container">
-				
-				<div  style="margin-top: 410px">
-					<select id="levelSelect">
-						<option value="1">Depth 100</option>
-						<option value="2">Depth 200</option>
-						<option value="3">Depth 300</option>
-						<option value="4">Depth 400</option>
-					</select>
+		<div class="overlay" id="title">
+			<div  style="margin-top: -85px; font-size: 40px; color: rgba(255,255,255,0.8)">Något sover<br />&nbsp;under Aitik</div>
+		</div>
 
-					<button id="go">GO</button>
+		<div id="menu" class="overlay">
+
+			<div class="container">
+
+				<div style="background-color: rgba(0,0,0,0.6); width: 740px; height: 480px; padding: 20px; font-size: 16px; line-height: 22px; margin-top: 50px;">
+					
+					<h4 style="text-align: center;">Inventory</h4>
+
+					<div>
+						<span>Iron</span> <span id="inv-iron" class="inv">0</span><br>
+						<span>Red stone</span> <span id="inv-red" class="inv">0</span><br>
+						<span>Yellow stone</span> <span id="inv-yellow" class="inv">0</span><br>
+						<span>Blue stone</span> <span id="inv-blue" class="inv">0</span><br>
+						<span>Diamond</span> <span id="inv-diamond" class="inv">0</span><br>
+						<span>Diamond drill</span> <span id="inv-diamond-drill" class="inv">0</span>
+					</div>
+					
+					<hr>
+
+					<h4 style="text-align: center;">Crafting</h4>
+
+					<div>
+						<span>Bomb 0</span> <span class="inv">10 Iron</span><br>
+						<span>Oxygen 60 sec</span> <span class="inv">10 red</span><br>
+						<span>Speed: 3</span> <span class="inv">3 green, 3 yellow</span><br>
+						<span>Diamond drill 0</span> <span class="inv">5 diamond</span><br>
+					</div>
+					
+					<hr>
+
+					<div style="text-align: center;">
+						<h3>DESCEND THE MINE</h3>
+						<select id="levelSelect">
+							<option value="1">Depth 100</option>
+							<option value="2">Depth 200</option>
+							<option value="3">Depth 300</option>
+							<option value="4">Depth 400</option>
+						</select>
+	
+						<button id="go">GO</button>
+					</div>
+	
 				</div>
+
 			</div>
 		</div>
 

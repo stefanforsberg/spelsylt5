@@ -10,7 +10,8 @@ export default class Player {
         red: 0,
         yellow: 0,
         blue: 0,
-        diamond: 0
+        diamond: 0,
+        bomb: 0,
       }
   
       const anims = scene.anims;
@@ -81,7 +82,11 @@ export default class Player {
       }
 
       if(Phaser.Input.Keyboard.JustDown(this.keySpace)) {
-        new Bomb(this.scene, sprite.x , sprite.y - sprite.height);
+        if(this.inventory.bomb > 0) {
+          new Bomb(this.scene, sprite.x , sprite.y - sprite.height);
+          this.inventory.bomb--;
+        }
+        
       }
   
       sprite.body.velocity.normalize().scale(speed);
