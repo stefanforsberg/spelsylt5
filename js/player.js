@@ -6,7 +6,11 @@ export default class Player {
       this.scene = scene;
 
       this.inventory = {
-        iron: 0
+        iron: 0,
+        red: 0,
+        yellow: 0,
+        blue: 0,
+        diamond: 0
       }
   
       const anims = scene.anims;

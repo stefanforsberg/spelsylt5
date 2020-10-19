@@ -33,11 +33,13 @@ export default class MainScene extends Phaser.Scene {
   create() {
     
     this.gameSettings = {
-        oxygenTimer: 3,
+        oxygenTimer: 60,
         ui: {
             death: document.getElementById("death"),
             menu: document.getElementById("menu"),
-            mine: document.getElementById("mine")
+            mine: document.getElementById("mine"),
+            levelSelect: document.getElementById("levelSelect"),
+            go: document.getElementById("go")
         }
     }
     
@@ -62,7 +64,8 @@ export default class MainScene extends Phaser.Scene {
   }
 
   setupMenu() {
-    document.getElementById("go").addEventListener("click", () => {
+    this.gameSettings.ui.go.addEventListener("click", () => {
+      this.gameSettings.level = this.gameSettings.ui.levelSelect.options[this.gameSettings.ui.levelSelect.selectedIndex].value;
       this.scene.launch("MineScene", this.gameSettings);
       this.scene.pause();
     });

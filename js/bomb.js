@@ -56,7 +56,7 @@ export default class Bomb {
     }
   
     destroy() {
-      this.scene.events.emit('bombExplode', {x: this.sprite.x, y: this.sprite.y} );
+      this.scene.level.explodingBomb({x: this.sprite.x, y: this.sprite.y});
 
       const emitter = this.scene.add.particles('smoke').createEmitter({
         x: this.sprite.x,

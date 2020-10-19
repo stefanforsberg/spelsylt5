@@ -5,7 +5,18 @@ import Player from "./player.js";
 export default class Level {
   create(scene) {
     this.scene = scene;
-    this.createLevel1();
+
+    switch (this.scene.gameSettings.level) {
+      case "1":
+        this.createLevel1();
+        break;
+      case "2":
+        this.createLevel2();
+        break;
+      default:
+        this.createLevel1();
+        break;
+    }
 
     this.player = new Player(
       this.scene,
@@ -25,25 +36,32 @@ export default class Level {
     camera.startFollow(this.player.sprite);
     camera.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 
-    this.scene.events.on(
-      "bombExplode",
-      (bomb) => {
-        console.log("bomb exploded " + bomb.x);
-
-        const tileX = this.groundLayer.worldToTileX(bomb.x);
-        const tileY = this.groundLayer.worldToTileY(bomb.y);
-
-        var tileAt = this.gemStoneLayer.getTileAt(tileX, tileY);
-
-        if (tileAt && tileAt.index === 8) {
-          this.gemStoneLayer.putTileAt(-1, tileX, tileY);
-          this.gemLayer.putTileAt(18, tileX, tileY);
-        }
-      },
-      this.scene
-    );
-
     return this;
+  }
+
+  explodingBomb(bomb) {
+    console.log("bomb exploded " + bomb.x);
+    console.log(this.groundLayer);
+
+    const tileX = this.groundLayer.worldToTileX(bomb.x);
+    const tileY = this.groundLayer.worldToTileY(bomb.y);
+
+    var tileAt = this.gemStoneLayer.getTileAt(tileX, tileY);
+
+    if (tileAt && tileAt.index === 8) {
+      const tile = new Phaser.Tilemaps.Tile(
+        this.gemLayer,
+        tileAt.properties.tileIndex,
+        tileX,
+        tileY
+      );
+
+      tile.properties.amount = tileAt.properties.amount;
+      tile.properties.type = tileAt.properties.type;
+
+      this.gemStoneLayer.putTileAt(-1, tileX, tileY);
+      this.gemLayer.putTileAt(tile, tileX, tileY);
+    }
   }
 
   exitLevel() {
@@ -52,10 +70,9 @@ export default class Level {
   }
 
   collectGem(player, tile) {
-    console.log("gem")
+    console.log(tile);
     this.gemLayer.removeTileAt(tile.x, tile.y);
     this.player.pickUpGem(tile.properties.type, tile.properties.amount);
-    
   }
 
   update(time, delta) {
@@ -94,13 +111,79 @@ export default class Level {
     rooms.forEach((r) => {
       var rand = Math.random();
       if (rand <= 0.8) {
-        var tile = new Phaser.Tilemaps.Tile(this.gemLayer, 28, r.centerX, r.centerY);
-        tile.properties.amount = Phaser.Math.Between(5,10);
-        tile.properties.type = 'iron'
+        var tile = new Phaser.Tilemaps.Tile(
+          this.gemLayer,
+          28,
+          r.centerX,
+          r.centerY
+        );
+        tile.properties.amount = Phaser.Math.Between(5, 10);
+        tile.properties.type = "iron";
         this.gemLayer.putTileAt(tile, r.centerX, r.centerY);
-        
       } else {
-          console.log("not stone")
+        console.log("not stone");
+      }
+    });
+  }
+
+  createLevel2() {
+    this.dungeon = new Dungeon({
+      width: 50,
+      height: 50,
+      doorPadding: 2,
+      rooms: {
+        width: { min: 5, max: 11 },
+        height: { min: 5, max: 11 },
+        maxRooms: 10,
+      },
+    });
+
+    this.map = this.scene.make.tilemap({
+      tileWidth: 16,
+      tileHeight: 16,
+      width: this.dungeon.width,
+      height: this.dungeon.height,
+    });
+
+    this.createCommonLevel();
+
+    const rooms = this.dungeon.rooms.slice();
+    rooms.shift();
+    rooms.forEach((r) => {
+      var rand = Math.random();
+      if (rand <= 0.33) {
+        var tile = new Phaser.Tilemaps.Tile(
+          this.gemLayer,
+          8,
+          r.centerX,
+          r.centerY
+        );
+        tile.properties.amount = Phaser.Math.Between(5, 10);
+        tile.properties.type = "red";
+        tile.properties.tileIndex = 38;
+        this.gemStoneLayer.putTileAt(tile, r.centerX, r.centerY);
+      } else if (rand <= 0.66) {
+        var tile = new Phaser.Tilemaps.Tile(
+          this.gemLayer,
+          8,
+          r.centerX,
+          r.centerY
+        );
+        tile.properties.amount = Phaser.Math.Between(5, 10);
+        tile.properties.type = "blue";
+        tile.properties.tileIndex = 48;
+        this.gemStoneLayer.putTileAt(tile, r.centerX, r.centerY);
+      } else if (rand <= 1) {
+        var tile = new Phaser.Tilemaps.Tile(
+          this.gemLayer,
+          8,
+          r.centerX,
+          r.centerY
+        );
+        tile.properties.amount = Phaser.Math.Between(5, 10);
+        tile.properties.type = "yellow";
+        tile.properties.tileIndex = 58;
+        this.gemStoneLayer.putTileAt(tile, r.centerX, r.centerY);
       }
     });
   }
@@ -113,9 +196,14 @@ export default class Level {
     this.gemLayer.fill(-1);
     this.gemLayer.setTileIndexCallback(18, this.collectGem, this);
     this.gemLayer.setTileIndexCallback(28, this.collectGem, this);
+    this.gemLayer.setTileIndexCallback(38, this.collectGem, this);
+    this.gemLayer.setTileIndexCallback(48, this.collectGem, this);
+    this.gemLayer.setTileIndexCallback(58, this.collectGem, this);
 
     this.gemStoneLayer = this.map.createBlankDynamicLayer("GemStone", tileset);
     this.gemStoneLayer.fill(-1);
+    this.gemStoneLayer.setCollision(8);
+    this.gemStoneLayer.setCollision(8);
     this.gemStoneLayer.setCollision(8);
 
     this.exitLayer = this.map.createBlankDynamicLayer("Exit", tileset);

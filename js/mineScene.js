@@ -38,11 +38,13 @@ export default class MineScene extends Phaser.Scene {
       margin: 0,
       spacing: 0,
     });
+
   }
 
   create(gameSettings) {
+    console.log("creating")
     this.gameSettings = gameSettings;
-    console.log(this.gameSettings)
+
     this.level = new Level().create(this);
 
     this.previousTime = 0;
