@@ -49,7 +49,9 @@ export default class MineScene extends Phaser.Scene {
 
     this.level = new Level().create(this);
 
-    this.previousTime = 0;
+    this.levelEnded = false;
+
+    this.previousTime = -1;
 
     this.cameras.main.setZoom(3);
 
@@ -62,14 +64,26 @@ export default class MineScene extends Phaser.Scene {
    
   }
 
-  endLevel() {
+  endLevel(success) {
+    
+    if(this.levelEnded) {
+      return;
+    }
+
+    this.levelEnded = true;
 
     this.level.player.freeze();
     const cam = this.cameras.main;
     cam.fade(250, 0, 0, 0);
     cam.once("camerafadeoutcomplete", () => {
-      this.gameSettings.ui.death.style.display = 'flex';
-      this.gameSettings.ui.mine.style.display = 'none';
+
+      if(!success) {
+        this.gameSettings.ui.death.style.display = 'flex';
+        this.gameSettings.ui.mine.style.display = 'none';
+      } else {
+        this.gameSettings.ui.success.style.display = 'flex';
+        this.gameSettings.ui.mine.style.display = 'none';
+      }
 
       this.input.keyboard.on('keydown', () => {
         this.scene.stop();
@@ -79,11 +93,7 @@ export default class MineScene extends Phaser.Scene {
     });
     
     console.log("end level")
-
-    
   }
-
-
 
   update(time, delta) {
     this.level.update();
@@ -92,7 +102,18 @@ export default class MineScene extends Phaser.Scene {
 
     if(currentTime > this.previousTime) {
       this.previousTime = currentTime;
-      document.getElementById("oxygen").innerText = `Oxygen: ${(this.gameSettings.oxygenTimer - currentTime)} sec`
+      const timeLeft = this.gameSettings.oxygenTimer - currentTime;
+      document.getElementById("oxygen").innerHTML = `O<sub>2</sub>: ${timeLeft} sec`
+
+      if(timeLeft === (this.gameSettings.oxygenTimer / 2)) {
+        this.tweens.add({
+          targets: this.cameras.main,
+          zoom: { value: 2, duration: 2000 },
+          yoyo: false,
+          loop: 0,
+        });
+      }
+
     }
   }
 }

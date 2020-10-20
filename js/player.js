@@ -11,7 +11,7 @@ export default class Player {
         yellow: 0,
         blue: 0,
         diamond: 0,
-        bomb: 0,
+        bomb: this.scene.gameSettings.inventory.bomb,
       }
   
       const anims = scene.anims;
@@ -45,6 +45,7 @@ export default class Player {
 
       this.keySpace = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+      this.updateInventoryUI();
       
     }
   
@@ -53,13 +54,16 @@ export default class Player {
     }
 
     pickUpGem(type, amount) {
-      
       this.inventory[type] += amount;
-      console.log( `${this.inventory[type]} ${type}`)
-      document.getElementById(type).innerText = `${this.inventory[type]} ${type}`
+    }
+
+    updateInventoryUI() {
+      this.scene.gameSettings.ui.bomb.innerHTML = `Bomb ${this.inventory.bomb}`
     }
   
     update() {
+
+      
       const keys = this.keys;
       const sprite = this.sprite;
       const speed = 100;
@@ -83,8 +87,26 @@ export default class Player {
 
       if(Phaser.Input.Keyboard.JustDown(this.keySpace)) {
         if(this.inventory.bomb > 0) {
-          new Bomb(this.scene, sprite.x , sprite.y - sprite.height);
+
+          
+          let baseX = sprite.x;
+          let baseY = sprite.y;
+
+          if(sprite.body.facing === Phaser.Physics.Arcade.FACING_UP) {
+            baseY -= 16
+          } else if(sprite.body.facing === Phaser.Physics.Arcade.FACING_DOWN) {
+            baseY += 16
+          } else if(sprite.body.facing === Phaser.Physics.Arcade.FACING_LEFT) {
+            baseX -= 16
+          } else if(sprite.body.facing === Phaser.Physics.Arcade.FACING_RIGHT) {
+            baseX += 16
+          } else {
+          }
+
+          new Bomb(this.scene, baseX , baseY);
           this.inventory.bomb--;
+
+          this.updateInventoryUI();
         }
         
       }

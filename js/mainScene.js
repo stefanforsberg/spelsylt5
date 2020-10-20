@@ -33,22 +33,28 @@ export default class MainScene extends Phaser.Scene {
   create() {
     
     this.gameSettings = {
-        oxygenTimer: 60,
+        oxygenTimer: 20,
         ui: {
             death: document.getElementById("death"),
             menu: document.getElementById("menu"),
             mine: document.getElementById("mine"),
             levelSelect: document.getElementById("levelSelect"),
             go: document.getElementById("go"),
-            title: document.getElementById("title")
+            title: document.getElementById("title"),
+            levelTextOverlay: document.getElementById("levelTextOverlay"),
+            levelText: document.getElementById("levelText"),
+            levelCountdown: document.getElementById("levelCountdown"),
+            success: document.getElementById("success"),
+            bomb: document.getElementById("bomb"),
+            oxygen: document.getElementById("oxygen")
         },
         inventory: {
-          iron: 0,
+          iron: 100,
           red: 0,
           yellow: 0,
           blue: 0,
           diamond: 0,
-          bomb: 5
+          bomb: 100
         }
     }
     
@@ -60,25 +66,80 @@ export default class MainScene extends Phaser.Scene {
 
     this.setupMenu();
 
+    this.updateMenu();
+
     this.events.on('pause', () => {
         this.gameSettings.ui.menu.style.display = 'none';
-        this.gameSettings.ui.title.style.display = 'none';
+        
         this.gameSettings.ui.mine.style.display = 'flex';
+        this.gameSettings.ui.levelTextOverlay.style.display = 'none'
+
+        this.previousTime = null;
+        this.levelCountdown = null;
     });
 
     this.events.on('resume', () => {
         this.gameSettings.ui.menu.style.display = 'flex';
         this.gameSettings.ui.mine.style.display = 'none';
         this.gameSettings.ui.death.style.display = 'none';
+        this.gameSettings.ui.success.style.display = 'none';
+
+        this.updateMenu();
     });
   }
 
   setupMenu() {
+
+    document.getElementById("craftBomb").addEventListener("click", () => {
+      if(this.gameSettings.inventory.iron >= 10) {
+        this.gameSettings.inventory.bomb = this.gameSettings.inventory.bomb + 1;
+        this.gameSettings.inventory.iron = this.gameSettings.inventory.iron - 10;
+        this.updateMenu();
+      }
+    })
+
     this.gameSettings.ui.go.addEventListener("click", () => {
       this.gameSettings.level = this.gameSettings.ui.levelSelect.options[this.gameSettings.ui.levelSelect.selectedIndex].value;
-      this.scene.launch("MineScene", this.gameSettings);
-      this.scene.pause();
+      
+      switch(this.gameSettings.level) {
+        case "1":
+          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 100</h3> A good place to collect Iron <img src="img/iron.png" class="pixelImage">. Make sure you get back to the lift <img src="img/elevator.png" class="pixelImage"> before the oxygen timer runs out. Good luck!`
+          break;
+        case "2":
+            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 200</h3> If you have bought bombs you can blow up hard rocks <img src="img/stoneRock.png" class="pixelImage"> and collect their red, green and blue stones.`
+            break;  
+      }
+      
+      this.gameSettings.ui.menu.style.display = 'none'
+      this.gameSettings.ui.title.style.display = 'none';
+      this.gameSettings.ui.levelTextOverlay.style.display = 'flex'
+      
+      this.previousTime = -1;
+
+      this.levelCountdown = this.time.addEvent({
+        delay: 5000,
+        callback: () => {
+          this.scene.pause();
+          this.scene.launch("MineScene", this.gameSettings)
+        },
+        callbackScope: this,
+        loop: false
+      });
+
     });
+  }
+
+  update() {
+    if(this.levelCountdown) {
+      
+      const currentTime = Math.floor(this.levelCountdown.getElapsedSeconds());
+
+      if(currentTime > this.previousTime) {
+        console.log(currentTime)
+        this.previousTime = currentTime;
+        this.gameSettings.ui.levelCountdown.innerText = `${(5 - currentTime)}`
+      }
+    }
   }
 
   updateMenu() {

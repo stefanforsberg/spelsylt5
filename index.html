@@ -18,6 +18,10 @@
 			font-family: 'Press Start 2P', cursive;
 		}
 
+		body {
+			background-color: black;
+		}
+
 		#game {
 			min-width: 100vw;
 			min-height: 100vh;
@@ -72,6 +76,8 @@
 		#death {
 			align-items: center;
 			display: none;
+			font-size: 16px;
+			line-height: 22px;
 		}
 
 		.container {
@@ -90,12 +96,42 @@
 			margin: 16px 0;
 		}
 
+		h3 {
+			text-align: center;
+		}
+
+		a,a:active,a:visited,a:hover {
+			color: white;
+			text-decoration: none;
+		}
+
+		#levelText {
+			width: 80%; 
+			font-size: 16px;
+			line-height: 22px;
+		}
+
+		#levelTextOverlay {
+			display: none;
+		}
+
+		#success {
+			display: none;
+		}
+
+		.pixelImage {
+			image-rendering: pixelated; transform: scale(2);
+			margin-bottom: 2px;
+			margin-left: 4px;
+			margin-right: 4px;
+		}
+
 	</style>
 
 </head>
 
 <body>
-
+	
   	<div id="game">
 
 		<div class="overlay" id="title">
@@ -106,12 +142,13 @@
 
 			<div class="container">
 
-				<div style="background-color: rgba(0,0,0,0.6); width: 740px; height: 480px; padding: 20px; font-size: 16px; line-height: 22px; margin-top: 50px;">
+				<div style="background: rgb(0,0,0); background: linear-gradient(180deg, rgba(0,0,0,0.3617822128851541) 0%, rgba(0,0,0,1) 100%); width: 740px; height: 480px; padding: 20px; font-size: 16px; line-height: 22px; margin-top: 50px;">
 					
 					<h4 style="text-align: center;">Inventory</h4>
 
 					<div>
 						<span>Iron</span> <span id="inv-iron" class="inv">0</span><br>
+						<span>Bomb</span> <span id="inv-bomb" class="inv">0</span><br>
 						<span>Red stone</span> <span id="inv-red" class="inv">0</span><br>
 						<span>Yellow stone</span> <span id="inv-yellow" class="inv">0</span><br>
 						<span>Blue stone</span> <span id="inv-blue" class="inv">0</span><br>
@@ -124,7 +161,7 @@
 					<h4 style="text-align: center;">Crafting</h4>
 
 					<div>
-						<span>Bomb 0</span> <span class="inv">10 Iron</span><br>
+						<span>Bomb 0</span> <span class="inv">10 Iron <a href="#" id="craftBomb">[+]</a></span><br>
 						<span>Oxygen 60 sec</span> <span class="inv">10 red</span><br>
 						<span>Speed: 3</span> <span class="inv">3 green, 3 yellow</span><br>
 						<span>Diamond drill 0</span> <span class="inv">5 diamond</span><br>
@@ -150,18 +187,38 @@
 		</div>
 
 		<div id="mine" class="overlay">
-			<div class="container">
+			<div class="container" style="justify-content: space-evenly;">
 				
-				<div id="inventory">
-					<div id="iron"></div>
-					<div id="red"></div>
-					<div id="yellow"></div>
-					<div id="blue"></div>
+				<div id="bomb">
+					0 bombs
 				</div>
 
 				
 				<div id="oxygen">
-					Oxygen
+					O<sub>2</sub>
+				</div>
+			</div>
+		</div>
+
+		<div id="levelTextOverlay" class="overlay">
+			<div class="container" style="align-items: center; background: rgb(0,0,0); background: linear-gradient(180deg, rgba(0,0,0,0.3617822128851541) 0%, rgba(0,0,0,1) 100%)">
+				
+				<div id="levelText">
+					
+				</div>
+
+				<div id="levelCountdown" style="font-size: 50px; text-align: center; position: absolute; margin-top: 351px;">
+					5
+				</div>
+			</div>
+		</div>
+
+		<div id="success" class="overlay">
+			<div class="container" style="align-items: center;">
+				
+				<div style="width: 80%">
+					You managed to get out in time! Use your gathered material wisely and return to the mines soon!<br><br>
+					(Press any key to try again)
 				</div>
 			</div>
 		</div>
@@ -169,8 +226,9 @@
 		<div id="death" class="overlay">
 			<div class="container" style="align-items: center;">
 				
-				<div>
-					You ran out of oxygen and lost the items you picked up.
+				<div style="width: 80%">
+					You ran out of oxygen and lost the items you picked up.<br><br>
+					(Press any key to try again)
 				</div>
 			</div>
 		</div>
