@@ -33,7 +33,6 @@ export default class MainScene extends Phaser.Scene {
   create() {
     
     this.gameSettings = {
-        oxygenTimer: 20,
         ui: {
             death: document.getElementById("death"),
             menu: document.getElementById("menu"),
@@ -49,12 +48,15 @@ export default class MainScene extends Phaser.Scene {
             oxygen: document.getElementById("oxygen")
         },
         inventory: {
+          cloudberry: 100,
           iron: 100,
-          red: 0,
-          yellow: 0,
-          blue: 0,
+          red: 9,
+          yellow: 9,
+          blue: 9,
           diamond: 0,
-          bomb: 100
+          bomb: 100,
+          speed: 75,
+          oxygen: 30
         }
     }
     
@@ -98,12 +100,34 @@ export default class MainScene extends Phaser.Scene {
       }
     })
 
+    document.getElementById("craftSpeed").addEventListener("click", () => {
+      if(this.gameSettings.inventory.iron >= 3 && this.gameSettings.inventory.cloudberry >= 5 && this.gameSettings.inventory.speed < 150) {
+        this.gameSettings.inventory.speed = this.gameSettings.inventory.speed + 10;
+        this.gameSettings.inventory.iron = this.gameSettings.inventory.iron - 3;
+        this.gameSettings.inventory.cloudberry = this.gameSettings.inventory.cloudberry - 3;
+        this.updateMenu();
+      }
+    })
+
+    document.getElementById("craftOxygen").addEventListener("click", () => {
+      if(this.gameSettings.inventory.blue >= 3 && this.gameSettings.inventory.red >= 3  && this.gameSettings.inventory.yellow >=3) {
+        this.gameSettings.inventory.oxygen = this.gameSettings.inventory.oxygen + 15;
+        this.gameSettings.inventory.red = this.gameSettings.inventory.red - 3;
+        this.gameSettings.inventory.blue = this.gameSettings.inventory.blue - 3;
+        this.gameSettings.inventory.yellow = this.gameSettings.inventory.yellow - 3;
+        this.updateMenu();
+      }
+    })
+
+    
+    
+
     this.gameSettings.ui.go.addEventListener("click", () => {
       this.gameSettings.level = this.gameSettings.ui.levelSelect.options[this.gameSettings.ui.levelSelect.selectedIndex].value;
       
       switch(this.gameSettings.level) {
         case "1":
-          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 100</h3> A good place to collect Iron <img src="img/iron.png" class="pixelImage">. Make sure you get back to the lift <img src="img/elevator.png" class="pixelImage"> before the oxygen timer runs out. Good luck!`
+          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 100</h3> A good place to collect Iron <img src="img/iron.png" class="pixelImage"> and cloudberries <img src="img/cloudberry.png" class="pixelImage">. Make sure you get back to the lift <img src="img/elevator.png" class="pixelImage"> before the oxygen timer runs out. Good luck!`
           break;
         case "2":
             this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 200</h3> If you have bought bombs you can blow up hard rocks <img src="img/stoneRock.png" class="pixelImage"> and collect their red, green and blue stones.`
@@ -146,7 +170,14 @@ export default class MainScene extends Phaser.Scene {
     Object.keys(this.gameSettings.inventory).forEach(k => {
       const e = document.getElementById("inv-" + k);
       if(e) {
-        e.innerText = this.gameSettings.inventory[k];
+        if(k === "oxygen") {
+          e.innerText = `Oxygen ${this.gameSettings.inventory[k]} sec`;  
+        } else if(k === "speed") {
+          e.innerText = `Speed ${this.gameSettings.inventory[k]}`; 
+        } else {
+          e.innerText = this.gameSettings.inventory[k];
+        }
+        
       }
     })
   }

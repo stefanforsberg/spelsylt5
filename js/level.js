@@ -70,7 +70,7 @@ export default class Level {
     const mainScene = this.scene.scene.get("MainScene");
 
     Object.keys(mainScene.gameSettings.inventory).forEach((k) => {
-      if (k === "bomb") {
+      if (k === "bomb" || k === "speed" || k === "diamonddrill" || k === "oxygen") {
         mainScene.gameSettings.inventory[k] = this.player.inventory[k];
       } else {
         mainScene.gameSettings.inventory[k] += this.player.inventory[k];
@@ -106,7 +106,7 @@ export default class Level {
       rooms: {
         width: { min: 5, max: 11 },
         height: { min: 5, max: 11 },
-        maxRooms: 5,
+        maxRooms: 8,
       },
     });
 
@@ -133,8 +133,22 @@ export default class Level {
         tile.properties.amount = Phaser.Math.Between(5, 10);
         tile.properties.type = "iron";
         this.gemLayer.putTileAt(tile, r.centerX, r.centerY);
-      } else {
-        console.log("not stone");
+      }
+
+      if (rand <= 0.5) {
+        var tile = new Phaser.Tilemaps.Tile(
+          this.gemLayer,
+          39,
+          r.centerX,
+          r.centerY
+        );
+        tile.properties.amount = Phaser.Math.Between(5, 10);
+        tile.properties.type = "Cloudberry";
+
+        const x = r.centerX + Phaser.Math.RND.pick([-1,1,-2,2])
+        const y = r.centerY + Phaser.Math.RND.pick([-1,1,-2,2])
+        this.gemLayer.putTileAt(tile, x, y);
+        this.groundLayer.putTileAt(32, x, y);
       }
     });
   }
@@ -240,17 +254,17 @@ export default class Level {
     tile.properties.tileIndex = 68;
     this.gemLayer.putTileAt(tile, diamondRoom1.centerX, diamondRoom1.centerY);
 
-    // tile = new Phaser.Tilemaps.Tile(
-    //   this.gemLayer,
-    //   68,
-    //   diamondRoom2.centerX,
-    //   diamondRoom2.centerY
-    // );
+    tile = new Phaser.Tilemaps.Tile(
+      this.gemLayer,
+      68,
+      diamondRoom2.centerX,
+      diamondRoom2.centerY
+    );
 
-    // tile.properties.amount = 1;
-    // tile.properties.type = "diamond";
-    // tile.properties.tileIndex = 68;
-    // this.gemLayer.putTileAt(tile);
+    tile.properties.amount = 1;
+    tile.properties.type = "diamond";
+    tile.properties.tileIndex = 68;
+    this.gemLayer.putTileAt(tile, diamondRoom2.centerX, diamondRoom2.centerY);
 
 
     rooms.forEach((r) => {
@@ -329,6 +343,7 @@ export default class Level {
     this.gemLayer.setTileIndexCallback(48, this.collectGem, this);
     this.gemLayer.setTileIndexCallback(58, this.collectGem, this);
     this.gemLayer.setTileIndexCallback(68, this.collectGem, this);
+    this.gemLayer.setTileIndexCallback(39, this.collectGem, this);
 
     this.gemStoneLayer = this.map.createBlankDynamicLayer("GemStone", tileset);
     this.gemStoneLayer.fill(-1);

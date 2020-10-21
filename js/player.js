@@ -11,7 +11,10 @@ export default class Player {
         yellow: 0,
         blue: 0,
         diamond: 0,
+        cloudberry: 0,
         bomb: this.scene.gameSettings.inventory.bomb,
+        speed: this.scene.gameSettings.inventory.speed,
+        oxygen: this.scene.gameSettings.inventory.oxygen,
       }
   
       const anims = scene.anims;
@@ -66,7 +69,7 @@ export default class Player {
       
       const keys = this.keys;
       const sprite = this.sprite;
-      const speed = 100;
+      const speed = this.inventory.speed;
       const prevVelocity = sprite.body.velocity.clone();
   
       sprite.body.setVelocity(0);
@@ -123,11 +126,15 @@ export default class Player {
       else {
         sprite.anims.stop();
   
+        console.log(prevVelocity.y)
+
         if (prevVelocity.y < 0) {
-          sprite.setTexture("characters", 0);
+          sprite.setTexture("characters", 8);
         }
-        else {
+        else if (prevVelocity.y > 0) {
           sprite.setTexture("characters", 0);
+        } else if (prevVelocity.x !== 0) {
+          sprite.setTexture("characters", 16);
         }
       }
     }

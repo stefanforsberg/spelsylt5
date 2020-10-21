@@ -34,6 +34,8 @@ export default class Bomb {
     destroy() {
       this.scene.level.explodingBomb({x: this.sprite.x, y: this.sprite.y});
 
+      this.scene.cameras.main.shake(300, 0.0005);
+
       const emitter = this.scene.add.particles('smoke').createEmitter({
         x: this.sprite.x,
         y: this.sprite.y,

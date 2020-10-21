@@ -56,7 +56,7 @@ export default class MineScene extends Phaser.Scene {
     this.cameras.main.setZoom(3);
 
     this.timer = this.time.addEvent({
-      delay: this.gameSettings.oxygenTimer*1000,
+      delay: this.gameSettings.inventory.oxygen*1000,
       callback: this.endLevel,
       callbackScope: this,
       loop: false
@@ -102,10 +102,10 @@ export default class MineScene extends Phaser.Scene {
 
     if(currentTime > this.previousTime) {
       this.previousTime = currentTime;
-      const timeLeft = this.gameSettings.oxygenTimer - currentTime;
-      document.getElementById("oxygen").innerHTML = `O<sub>2</sub>: ${timeLeft} sec`
+      const timeLeft = this.gameSettings.inventory.oxygen - currentTime;
+      this.gameSettings.ui.oxygen.innerHTML = `O<sub>2</sub>: ${timeLeft} sec`
 
-      if(timeLeft === (this.gameSettings.oxygenTimer / 2)) {
+      if(timeLeft === (this.gameSettings.inventory.oxygen / 2)) {
         this.tweens.add({
           targets: this.cameras.main,
           zoom: { value: 2, duration: 2000 },

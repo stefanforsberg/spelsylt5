@@ -100,6 +100,10 @@
 			text-align: center;
 		}
 
+		h4 {
+			margin-bottom: 3px;
+		}
+
 		a,a:active,a:visited,a:hover {
 			color: white;
 			text-decoration: none;
@@ -121,9 +125,9 @@
 
 		.pixelImage {
 			image-rendering: pixelated; transform: scale(2);
-			margin-bottom: 2px;
+			/* margin-bottom: 2px;
 			margin-left: 4px;
-			margin-right: 4px;
+			margin-right: 4px; */
 		}
 
 	</style>
@@ -142,29 +146,30 @@
 
 			<div class="container">
 
-				<div style="background: rgb(0,0,0); background: linear-gradient(180deg, rgba(0,0,0,0.3617822128851541) 0%, rgba(0,0,0,1) 100%); width: 740px; height: 480px; padding: 20px; font-size: 16px; line-height: 22px; margin-top: 50px;">
+				<div style="background: rgb(0,0,0); background: linear-gradient(180deg, rgba(0,0,0,0.3617822128851541) 0%, rgba(0,0,0,1) 100%); width: 740px; height: 500px; padding: 10px 20px; font-size: 14px; line-height: 23px; margin-top: 40px;">
 					
-					<h4 style="text-align: center;">Inventory</h4>
+					<h4 style="text-align: center;">INVENTORY</h4>
 
 					<div>
-						<span>Iron</span> <span id="inv-iron" class="inv">0</span><br>
-						<span>Bomb</span> <span id="inv-bomb" class="inv">0</span><br>
-						<span>Red stone</span> <span id="inv-red" class="inv">0</span><br>
-						<span>Yellow stone</span> <span id="inv-yellow" class="inv">0</span><br>
-						<span>Blue stone</span> <span id="inv-blue" class="inv">0</span><br>
-						<span>Diamond</span> <span id="inv-diamond" class="inv">0</span><br>
+						<span><img src="dist/img/cloudberry.png" class="pixelImage"> Cloudberry</span> <span id="inv-cloudberry" class="inv">0</span><br>
+						<span><img src="dist/img/iron.png" class="pixelImage"> Iron</span> <span id="inv-iron" class="inv">0</span><br>
+						<span><img src="dist/img/redstone.png" class="pixelImage"> Red stone</span> <span id="inv-red" class="inv">0</span><br>
+						<span><img src="dist/img/yellowstone.png" class="pixelImage"> Yellow stone</span> <span id="inv-yellow" class="inv">0</span><br>
+						<span><img src="dist/img/bluestone.png" class="pixelImage"> Blue stone</span> <span id="inv-blue" class="inv">0</span><br>
+						<span><img src="dist/img/diamond.png" class="pixelImage"> Diamond</span> <span id="inv-diamond" class="inv">0</span><br>
+						<span>Bomb (spacebar to place)</span> <span id="inv-bomb" class="inv">0</span><br>
 						<span>Diamond drill</span> <span id="inv-diamond-drill" class="inv">0</span>
 					</div>
 					
 					<hr>
 
-					<h4 style="text-align: center;">Crafting</h4>
+					<h4 style="text-align: center;">CRAFTING</h4>
 
 					<div>
-						<span>Bomb 0</span> <span class="inv">10 Iron <a href="#" id="craftBomb">[+]</a></span><br>
-						<span>Oxygen 60 sec</span> <span class="inv">10 red</span><br>
-						<span>Speed: 3</span> <span class="inv">3 green, 3 yellow</span><br>
-						<span>Diamond drill 0</span> <span class="inv">5 diamond</span><br>
+						<span>Bomb</span> <span class="inv"><img src="dist/img/iron.png" class="pixelImage">*10 <a href="#" id="craftBomb">[+]</a></span><br>
+						<span id="inv-oxygen">Oxygen 60 sec</span> <span class="inv"><img src="dist/img/redstone.png" class="pixelImage">*3 <img src="dist/img/yellowstone.png" class="pixelImage">*3 <img src="dist/img/bluestone.png" class="pixelImage">*3 <a href="#" id="craftOxygen">[+]</a></span><br>
+						<span id="inv-speed">Speed 3</span> <span class="inv"><img src="dist/img/iron.png" class="pixelImage">*3 <img src="dist/img/cloudberry.png" class="pixelImage">*5 <a href="#" id="craftSpeed">[+]</a></span><br>
+						<span id="inv-diamonddrill">Diamond drill 0</span> <span class="inv"><img src="dist/img/diamond.png" class="pixelImage">*5 <a href="#" id="craftDiamondDrill">[+]</a></span><br>
 					</div>
 					
 					<hr>
