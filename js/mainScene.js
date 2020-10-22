@@ -31,35 +31,35 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    
     this.gameSettings = {
-        ui: {
-            death: document.getElementById("death"),
-            menu: document.getElementById("menu"),
-            mine: document.getElementById("mine"),
-            levelSelect: document.getElementById("levelSelect"),
-            go: document.getElementById("go"),
-            title: document.getElementById("title"),
-            levelTextOverlay: document.getElementById("levelTextOverlay"),
-            levelText: document.getElementById("levelText"),
-            levelCountdown: document.getElementById("levelCountdown"),
-            success: document.getElementById("success"),
-            bomb: document.getElementById("bomb"),
-            oxygen: document.getElementById("oxygen")
-        },
-        inventory: {
-          cloudberry: 100,
-          iron: 100,
-          red: 9,
-          yellow: 9,
-          blue: 9,
-          diamond: 0,
-          bomb: 100,
-          speed: 75,
-          oxygen: 30
-        }
-    }
-    
+      ui: {
+        death: document.getElementById("death"),
+        menu: document.getElementById("menu"),
+        mine: document.getElementById("mine"),
+        levelSelect: document.getElementById("levelSelect"),
+        go: document.getElementById("go"),
+        title: document.getElementById("title"),
+        levelTextOverlay: document.getElementById("levelTextOverlay"),
+        levelText: document.getElementById("levelText"),
+        levelCountdown: document.getElementById("levelCountdown"),
+        success: document.getElementById("success"),
+        bomb: document.getElementById("bomb"),
+        oxygen: document.getElementById("oxygen"),
+      },
+      inventory: {
+        cloudberry: 100,
+        iron: 100,
+        red: 9,
+        yellow: 9,
+        blue: 9,
+        diamond: 5,
+        bomb: 100,
+        speed: 75,
+        oxygen: 30,
+        diamonddrill: 0
+      },
+    };
+
     this.add.image(400, 300, "title");
 
     this.createSnow();
@@ -70,116 +70,133 @@ export default class MainScene extends Phaser.Scene {
 
     this.updateMenu();
 
-    this.events.on('pause', () => {
-        this.gameSettings.ui.menu.style.display = 'none';
-        
-        this.gameSettings.ui.mine.style.display = 'flex';
-        this.gameSettings.ui.levelTextOverlay.style.display = 'none'
+    this.events.on("pause", () => {
+      this.gameSettings.ui.menu.style.display = "none";
 
-        this.previousTime = null;
-        this.levelCountdown = null;
+      this.gameSettings.ui.mine.style.display = "flex";
+      this.gameSettings.ui.levelTextOverlay.style.display = "none";
+
+      this.previousTime = null;
+      this.levelCountdown = null;
     });
 
-    this.events.on('resume', () => {
-        this.gameSettings.ui.menu.style.display = 'flex';
-        this.gameSettings.ui.mine.style.display = 'none';
-        this.gameSettings.ui.death.style.display = 'none';
-        this.gameSettings.ui.success.style.display = 'none';
+    this.events.on("resume", () => {
+      this.gameSettings.ui.menu.style.display = "flex";
+      this.gameSettings.ui.mine.style.display = "none";
+      this.gameSettings.ui.death.style.display = "none";
+      this.gameSettings.ui.success.style.display = "none";
 
-        this.updateMenu();
+      this.updateMenu();
     });
   }
 
   setupMenu() {
-
     document.getElementById("craftBomb").addEventListener("click", () => {
-      if(this.gameSettings.inventory.iron >= 10) {
+      if (this.gameSettings.inventory.iron >= 10) {
         this.gameSettings.inventory.bomb = this.gameSettings.inventory.bomb + 1;
         this.gameSettings.inventory.iron = this.gameSettings.inventory.iron - 10;
         this.updateMenu();
       }
-    })
+    });
 
     document.getElementById("craftSpeed").addEventListener("click", () => {
-      if(this.gameSettings.inventory.iron >= 3 && this.gameSettings.inventory.cloudberry >= 5 && this.gameSettings.inventory.speed < 150) {
-        this.gameSettings.inventory.speed = this.gameSettings.inventory.speed + 10;
+      if (this.gameSettings.inventory.iron >= 3 && this.gameSettings.inventory.cloudberry >= 5 && this.gameSettings.inventory.speed < 125) {
+        this.gameSettings.inventory.speed = this.gameSettings.inventory.speed + 5;
         this.gameSettings.inventory.iron = this.gameSettings.inventory.iron - 3;
         this.gameSettings.inventory.cloudberry = this.gameSettings.inventory.cloudberry - 3;
         this.updateMenu();
       }
-    })
+    });
 
     document.getElementById("craftOxygen").addEventListener("click", () => {
-      if(this.gameSettings.inventory.blue >= 3 && this.gameSettings.inventory.red >= 3  && this.gameSettings.inventory.yellow >=3) {
+      if (this.gameSettings.inventory.blue >= 3 && this.gameSettings.inventory.red >= 3 && this.gameSettings.inventory.yellow >= 3) {
         this.gameSettings.inventory.oxygen = this.gameSettings.inventory.oxygen + 15;
         this.gameSettings.inventory.red = this.gameSettings.inventory.red - 3;
         this.gameSettings.inventory.blue = this.gameSettings.inventory.blue - 3;
         this.gameSettings.inventory.yellow = this.gameSettings.inventory.yellow - 3;
         this.updateMenu();
       }
-    })
+    });
 
-    
-    
+    document.getElementById("craftDiamondDrill").addEventListener("click", () => {
+      if (this.gameSettings.inventory.diamond >= 5 && this.gameSettings.inventory.diamonddrill === 0) {
+        this.gameSettings.inventory.diamonddrill = 1;
+        this.gameSettings.inventory.diamond = this.gameSettings.inventory.diamond - 5;
+
+        let o = document.createElement("option");
+        o.text = "Depth 400";
+        o.value = 4;
+
+        this.gameSettings.ui.levelSelect.add(o)
+
+        o = document.createElement("option");
+        o.text = "Depth 500";
+        o.value = 5;
+
+        this.gameSettings.ui.levelSelect.add(o)
+
+        this.updateMenu();
+      }
+    });
 
     this.gameSettings.ui.go.addEventListener("click", () => {
       this.gameSettings.level = this.gameSettings.ui.levelSelect.options[this.gameSettings.ui.levelSelect.selectedIndex].value;
-      
-      switch(this.gameSettings.level) {
+
+      switch (this.gameSettings.level) {
         case "1":
-          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 100</h3> A good place to collect Iron <img src="img/iron.png" class="pixelImage"> and cloudberries <img src="img/cloudberry.png" class="pixelImage">. Make sure you get back to the lift <img src="img/elevator.png" class="pixelImage"> before the oxygen timer runs out. Good luck!`
+          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 100</h3> A good place to collect Iron <img src="img/iron.png" class="pixelImage"> and cloudberries <img src="img/cloudberry.png" class="pixelImage">. Make sure you get back to the lift <img src="img/elevator.png" class="pixelImage"> before the oxygen timer runs out. Good luck!`;
           break;
         case "2":
-            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 200</h3> If you have bought bombs you can blow up hard rocks <img src="img/stoneRock.png" class="pixelImage"> and collect their red, green and blue stones.`
-            break;  
+          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 200</h3> If you have bought bombs you can blow up hard rocks <img src="img/stoneRock.png" class="pixelImage"> and collect their red, green and blue stones.`;
+          break;
+        case "3":
+          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 300</h3> Bombs are needed to navigate here. At this depth you can find diamond <img src="img/diamond.png" class="pixelImage"> which are needed to build the diamond drill and going below 300 depth.`;
+          break;
       }
-      
-      this.gameSettings.ui.menu.style.display = 'none'
-      this.gameSettings.ui.title.style.display = 'none';
-      this.gameSettings.ui.levelTextOverlay.style.display = 'flex'
-      
+
+      this.gameSettings.ui.menu.style.display = "none";
+      this.gameSettings.ui.title.style.display = "none";
+      this.gameSettings.ui.levelTextOverlay.style.display = "flex";
+
       this.previousTime = -1;
 
       this.levelCountdown = this.time.addEvent({
         delay: 5000,
         callback: () => {
           this.scene.pause();
-          this.scene.launch("MineScene", this.gameSettings)
+          this.scene.launch("MineScene", this.gameSettings);
         },
         callbackScope: this,
-        loop: false
+        loop: false,
       });
-
     });
   }
 
   update() {
-    if(this.levelCountdown) {
-      
+    if (this.levelCountdown) {
       const currentTime = Math.floor(this.levelCountdown.getElapsedSeconds());
 
-      if(currentTime > this.previousTime) {
-        console.log(currentTime)
+      if (currentTime > this.previousTime) {
+        console.log(currentTime);
         this.previousTime = currentTime;
-        this.gameSettings.ui.levelCountdown.innerText = `${(5 - currentTime)}`
+        this.gameSettings.ui.levelCountdown.innerText = `${5 - currentTime}`;
       }
     }
   }
 
   updateMenu() {
-    Object.keys(this.gameSettings.inventory).forEach(k => {
+    Object.keys(this.gameSettings.inventory).forEach((k) => {
       const e = document.getElementById("inv-" + k);
-      if(e) {
-        if(k === "oxygen") {
-          e.innerText = `Oxygen ${this.gameSettings.inventory[k]} sec`;  
-        } else if(k === "speed") {
-          e.innerText = `Speed ${this.gameSettings.inventory[k]}`; 
+      if (e) {
+        if (k === "oxygen") {
+          e.innerText = `Oxygen ${this.gameSettings.inventory[k]} sec`;
+        } else if (k === "speed") {
+          e.innerText = `Speed ${this.gameSettings.inventory[k]}${this.gameSettings.inventory[k] == 125 ? ' (max)' : ''}`;
         } else {
           e.innerText = this.gameSettings.inventory[k];
         }
-        
       }
-    })
+    });
   }
 
   createNorthernLights() {
@@ -199,7 +216,7 @@ export default class MainScene extends Phaser.Scene {
           const emitterNl = this.add.particles("nl").createEmitter({
             x: 0,
             y: 0,
-            alpha: { start: 0.00, end: 0.01 },
+            alpha: { start: 0.0, end: 0.01 },
             blendMode: "NORMAL",
             lifespan: 9000,
             gravityX: 3,
@@ -221,7 +238,7 @@ export default class MainScene extends Phaser.Scene {
           const emitterNlp = this.add.particles("nlp").createEmitter({
             x: 0,
             y: 0,
-            alpha: { start: 0.00, end: 0.02 },
+            alpha: { start: 0.0, end: 0.02 },
             blendMode: "NORMAL",
             lifespan: 5000,
             gravityX: 2,

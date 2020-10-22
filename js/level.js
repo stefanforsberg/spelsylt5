@@ -16,16 +16,15 @@ export default class Level {
       case "3":
         this.createLevel3();
         break;
+      case "4":
+        this.createLevel4();
+        break;
       default:
         this.createLevel1();
         break;
     }
 
-    this.player = new Player(
-      this.scene,
-      this.map.widthInPixels / 2,
-      this.map.heightInPixels / 2
-    );
+    this.player = new Player(this.scene, this.map.widthInPixels / 2, this.map.heightInPixels / 2);
 
     this.player.inventory.bomb = this.scene.gameSettings.inventory.bomb;
 
@@ -51,18 +50,15 @@ export default class Level {
     var tileAt = this.gemStoneLayer.getTileAt(tileX, tileY);
 
     if (tileAt && tileAt.index === 8) {
-      const tile = new Phaser.Tilemaps.Tile(
-        this.gemLayer,
-        tileAt.properties.tileIndex,
-        tileX,
-        tileY
-      );
+      const tile = new Phaser.Tilemaps.Tile(this.gemLayer, tileAt.properties.tileIndex, tileX, tileY);
 
       tile.properties.amount = tileAt.properties.amount;
       tile.properties.type = tileAt.properties.type;
 
       this.gemStoneLayer.putTileAt(-1, tileX, tileY);
       this.gemLayer.putTileAt(tile, tileX, tileY);
+    } else if (tileAt && tileAt.index === 21) {
+      this.gemStoneLayer.putTileAt(-1, tileX, tileY);
     }
   }
 
@@ -90,10 +86,7 @@ export default class Level {
 
     this.playerTileX = this.groundLayer.worldToTileX(this.player.sprite.x);
     this.playerTileY = this.groundLayer.worldToTileY(this.player.sprite.y);
-    const playerRoom = this.dungeon.getRoomAt(
-      this.playerTileX,
-      this.playerTileY
-    );
+    const playerRoom = this.dungeon.getRoomAt(this.playerTileX, this.playerTileY);
 
     this.mineVisibility.setActiveRoom(playerRoom);
   }
@@ -124,29 +117,19 @@ export default class Level {
     rooms.forEach((r) => {
       var rand = Math.random();
       if (rand <= 0.8) {
-        var tile = new Phaser.Tilemaps.Tile(
-          this.gemLayer,
-          28,
-          r.centerX,
-          r.centerY
-        );
+        var tile = new Phaser.Tilemaps.Tile(this.gemLayer, 28, r.centerX, r.centerY);
         tile.properties.amount = Phaser.Math.Between(5, 10);
         tile.properties.type = "iron";
         this.gemLayer.putTileAt(tile, r.centerX, r.centerY);
       }
 
       if (rand <= 0.5) {
-        var tile = new Phaser.Tilemaps.Tile(
-          this.gemLayer,
-          39,
-          r.centerX,
-          r.centerY
-        );
+        var tile = new Phaser.Tilemaps.Tile(this.gemLayer, 39, r.centerX, r.centerY);
         tile.properties.amount = Phaser.Math.Between(5, 10);
         tile.properties.type = "Cloudberry";
 
-        const x = r.centerX + Phaser.Math.RND.pick([-1,1,-2,2])
-        const y = r.centerY + Phaser.Math.RND.pick([-1,1,-2,2])
+        const x = r.centerX + Phaser.Math.RND.pick([-1, 1, -2, 2]);
+        const y = r.centerY + Phaser.Math.RND.pick([-1, 1, -2, 2]);
         this.gemLayer.putTileAt(tile, x, y);
         this.groundLayer.putTileAt(32, x, y);
       }
@@ -179,34 +162,19 @@ export default class Level {
     rooms.forEach((r) => {
       var rand = Math.random();
       if (rand <= 0.33) {
-        var tile = new Phaser.Tilemaps.Tile(
-          this.gemLayer,
-          8,
-          r.centerX,
-          r.centerY
-        );
+        var tile = new Phaser.Tilemaps.Tile(this.gemLayer, 8, r.centerX, r.centerY);
         tile.properties.amount = Phaser.Math.Between(5, 10);
         tile.properties.type = "red";
         tile.properties.tileIndex = 38;
         this.gemStoneLayer.putTileAt(tile, r.centerX, r.centerY);
       } else if (rand <= 0.66) {
-        var tile = new Phaser.Tilemaps.Tile(
-          this.gemLayer,
-          8,
-          r.centerX,
-          r.centerY
-        );
+        var tile = new Phaser.Tilemaps.Tile(this.gemLayer, 8, r.centerX, r.centerY);
         tile.properties.amount = Phaser.Math.Between(5, 10);
         tile.properties.type = "blue";
         tile.properties.tileIndex = 48;
         this.gemStoneLayer.putTileAt(tile, r.centerX, r.centerY);
       } else if (rand <= 1) {
-        var tile = new Phaser.Tilemaps.Tile(
-          this.gemLayer,
-          8,
-          r.centerX,
-          r.centerY
-        );
+        var tile = new Phaser.Tilemaps.Tile(this.gemLayer, 8, r.centerX, r.centerY);
         tile.properties.amount = Phaser.Math.Between(5, 10);
         tile.properties.type = "yellow";
         tile.properties.tileIndex = 58;
@@ -237,67 +205,48 @@ export default class Level {
     this.createCommonLevel();
 
     const rooms = this.dungeon.rooms.slice();
-    rooms.shift();
+
+    const startRoom = rooms.shift();
+
+    this.exitLayer.putTileAt(59, startRoom.x + 2, startRoom.y + 2);
+
+    startRoom.getDoorLocations().forEach((d) => {
+      this.gemStoneLayer.putTileAt(21, startRoom.x + d.x, startRoom.y + d.y);
+    });
 
     const diamondRoom1 = Phaser.Utils.Array.RemoveRandomElement(rooms);
     const diamondRoom2 = Phaser.Utils.Array.RemoveRandomElement(rooms);
 
-    let tile = new Phaser.Tilemaps.Tile(
-      this.gemLayer,
-      68,
-      diamondRoom1.centerX,
-      diamondRoom1.centerY
-    );
+    let tile = new Phaser.Tilemaps.Tile(this.gemLayer, 68, diamondRoom1.centerX, diamondRoom1.centerY);
 
     tile.properties.amount = 1;
     tile.properties.type = "diamond";
     tile.properties.tileIndex = 68;
     this.gemLayer.putTileAt(tile, diamondRoom1.centerX, diamondRoom1.centerY);
 
-    tile = new Phaser.Tilemaps.Tile(
-      this.gemLayer,
-      68,
-      diamondRoom2.centerX,
-      diamondRoom2.centerY
-    );
+    tile = new Phaser.Tilemaps.Tile(this.gemLayer, 68, diamondRoom2.centerX, diamondRoom2.centerY);
 
     tile.properties.amount = 1;
     tile.properties.type = "diamond";
     tile.properties.tileIndex = 68;
     this.gemLayer.putTileAt(tile, diamondRoom2.centerX, diamondRoom2.centerY);
 
-
     rooms.forEach((r) => {
       var rand = Math.random();
       if (rand <= 0.33) {
-        var tile = new Phaser.Tilemaps.Tile(
-          this.gemLayer,
-          8,
-          r.centerX,
-          r.centerY
-        );
+        var tile = new Phaser.Tilemaps.Tile(this.gemLayer, 8, r.centerX, r.centerY);
         tile.properties.amount = Phaser.Math.Between(5, 10);
         tile.properties.type = "red";
         tile.properties.tileIndex = 38;
         this.gemStoneLayer.putTileAt(tile, r.centerX, r.centerY);
       } else if (rand <= 0.66) {
-        var tile = new Phaser.Tilemaps.Tile(
-          this.gemLayer,
-          8,
-          r.centerX,
-          r.centerY
-        );
+        var tile = new Phaser.Tilemaps.Tile(this.gemLayer, 8, r.centerX, r.centerY);
         tile.properties.amount = Phaser.Math.Between(5, 10);
         tile.properties.type = "blue";
         tile.properties.tileIndex = 48;
         this.gemStoneLayer.putTileAt(tile, r.centerX, r.centerY);
       } else if (rand <= 1) {
-        var tile = new Phaser.Tilemaps.Tile(
-          this.gemLayer,
-          8,
-          r.centerX,
-          r.centerY
-        );
+        var tile = new Phaser.Tilemaps.Tile(this.gemLayer, 8, r.centerX, r.centerY);
         tile.properties.amount = Phaser.Math.Between(5, 10);
         tile.properties.type = "yellow";
         tile.properties.tileIndex = 58;
@@ -306,33 +255,66 @@ export default class Level {
     });
   }
 
-  createCommonLevel() {
+  createLevel4() {
+    this.dungeon = new Dungeon({
+      width: 50,
+      height: 50,
+      doorPadding: 2,
+      rooms: {
+        width: { min: 6, max: 13 },
+        height: { min: 6, max: 13 },
+        maxRooms: 20,
+      },
+    });
+
+    this.map = this.scene.make.tilemap({
+      tileWidth: 16,
+      tileHeight: 16,
+      width: this.dungeon.width,
+      height: this.dungeon.height,
+    });
+
+    this.createCommonLevel("cult");
+
+    this.dungeon.rooms.forEach((room) => {
+      this.groundLayer.weightedRandomize(room.x + 1, room.y + 1, room.width - 2, room.height - 2, [
+        { index: [71], weight: 6 },
+        { index: [-1], weight: 1 },
+        { index: [60, 61, 62, 63, 64, 65, 66, 67, 68, 70, 72, 81, 81], weight: 3 },
+      ]);
+    });
+  }
+
+  createCommonLevel(levelSeed) {
     const tileset = this.map.addTilesetImage("tiles", null, 16, 16, 1, 2);
 
-    const mappedTiles = this.dungeon.getMappedTiles({
-      empty: -1,
-      floor: 13,
-      door: 13,
-      wall: 2,
-    });
+    let mappedTiles;
+
+    if (levelSeed !== "cult") {
+      mappedTiles = this.dungeon.getMappedTiles({
+        empty: -1,
+        floor: 13,
+        door: 13,
+        wall: 2,
+      });
+    } else {
+      mappedTiles = this.dungeon.getMappedTiles({
+        empty: -1,
+        floor: 71,
+        door: 71,
+        wall: 2,
+      });
+    }
 
     this.groundLayer = this.map.createBlankDynamicLayer("Ground", tileset);
     this.groundLayer.putTilesAt(mappedTiles, 0, 0);
     this.groundLayer.setCollision(2);
 
     this.dungeon.rooms.forEach((room) => {
-      console.log(room.bottom);
-
-      this.groundLayer.weightedRandomize(
-        room.x + 1,
-        room.y + 1,
-        room.width - 2,
-        room.height - 2,
-        [
-          { index: [12, 13, 14], weight: 9 },
-          { index: [22, 23, 24, 25], weight: 1 },
-        ]
-      );
+      this.groundLayer.weightedRandomize(room.x + 1, room.y + 1, room.width - 2, room.height - 2, [
+        { index: [12, 13, 14], weight: 9 },
+        { index: [22, 23, 24, 25], weight: 1 }
+      ]);
     });
 
     this.gemLayer = this.map.createBlankDynamicLayer("Gems", tileset);
@@ -348,8 +330,7 @@ export default class Level {
     this.gemStoneLayer = this.map.createBlankDynamicLayer("GemStone", tileset);
     this.gemStoneLayer.fill(-1);
     this.gemStoneLayer.setCollision(8);
-    this.gemStoneLayer.setCollision(8);
-    this.gemStoneLayer.setCollision(8);
+    this.gemStoneLayer.setCollision(21);
 
     this.exitLayer = this.map.createBlankDynamicLayer("Exit", tileset);
     this.exitLayer.fill(-1);
@@ -359,9 +340,7 @@ export default class Level {
     this.exitLayer.putTileAt(9, startRoom.right - 1, startRoom.top);
     this.exitLayer.setTileIndexCallback(19, this.exitLevel, this);
 
-    const shadowLayer = this.map
-      .createBlankDynamicLayer("Fog", tileset)
-      .fill(0);
+    const shadowLayer = this.map.createBlankDynamicLayer("Fog", tileset).fill(0);
 
     this.mineVisibility = new MineVisibility(shadowLayer);
   }
