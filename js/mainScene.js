@@ -56,7 +56,7 @@ export default class MainScene extends Phaser.Scene {
         bomb: 100,
         speed: 75,
         oxygen: 30,
-        diamonddrill: 0
+        diamonddrill: 0,
       },
     };
 
@@ -127,13 +127,13 @@ export default class MainScene extends Phaser.Scene {
         o.text = "Depth 400";
         o.value = 4;
 
-        this.gameSettings.ui.levelSelect.add(o)
+        this.gameSettings.ui.levelSelect.add(o);
 
         o = document.createElement("option");
         o.text = "Depth 500";
         o.value = 5;
 
-        this.gameSettings.ui.levelSelect.add(o)
+        this.gameSettings.ui.levelSelect.add(o);
 
         this.updateMenu();
       }
@@ -151,6 +151,12 @@ export default class MainScene extends Phaser.Scene {
           break;
         case "3":
           this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 300</h3> Bombs are needed to navigate here. At this depth you can find diamond <img src="img/diamond.png" class="pixelImage"> which are needed to build the diamond drill and going below 300 depth.`;
+          break;
+        case "4":
+          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 400</h3> Maybe we weren't supposed to mine this deep... n'gha'agl`;
+          break;
+        case "5":
+          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 500</h3> What are those symbols? Didn't I see something similar on the level above? Hnahr'luhh ah ch'nglui`;
           break;
       }
 
@@ -191,7 +197,7 @@ export default class MainScene extends Phaser.Scene {
         if (k === "oxygen") {
           e.innerText = `Oxygen ${this.gameSettings.inventory[k]} sec`;
         } else if (k === "speed") {
-          e.innerText = `Speed ${this.gameSettings.inventory[k]}${this.gameSettings.inventory[k] == 125 ? ' (max)' : ''}`;
+          e.innerText = `Speed ${this.gameSettings.inventory[k]}${this.gameSettings.inventory[k] == 125 ? " (max)" : ""}`;
         } else {
           e.innerText = this.gameSettings.inventory[k];
         }

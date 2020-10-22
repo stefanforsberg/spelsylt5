@@ -15,7 +15,7 @@ export default class MineScene extends Phaser.Scene {
   }
 
   preload() {
-    console.log("coming");
+    this.load.image("bg", "../img/bg.png")
     this.load.image("tiles", "../img/minetileset-extruded.png");
     this.load.image("smoke", "../img/smoke.png");
     this.load.spritesheet("characters", "../img/gubbe2.png", {

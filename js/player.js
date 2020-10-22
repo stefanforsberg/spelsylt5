@@ -126,8 +126,6 @@ export default class Player {
       else {
         sprite.anims.stop();
   
-        console.log(prevVelocity.y)
-
         if (prevVelocity.y < 0) {
           sprite.setTexture("characters", 8);
         }
