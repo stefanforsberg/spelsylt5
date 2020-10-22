@@ -32,6 +32,9 @@ export default class Bomb {
     }
     
     destroy() {
+
+      this.scene.sound.play("bomb", {volume: 0.3})
+
       this.scene.level.explodingBomb({x: this.sprite.x, y: this.sprite.y});
 
       this.scene.cameras.main.shake(300, 0.0005);

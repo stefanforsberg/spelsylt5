@@ -57,6 +57,7 @@ export default class Player {
     }
 
     pickUpGem(type, amount) {
+      this.scene.sound.play("item", {volume: 0.3})
       this.inventory[type] += amount;
     }
 

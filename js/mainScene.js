@@ -11,26 +11,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("title", "../img/title.png");
-    this.load.image("snowflake", "../img/snowflake.png");
-    this.load.image("nl", "../img/nl.png");
-    this.load.image("nlp", "../img/nlp.png");
-  }
 
-  createSnow() {
-    const emitter = this.add.particles("snowflake").createEmitter({
-      angle: { min: 0, max: 360 },
-      scale: { start: 1, end: 0 },
-      alpha: { start: 0.6, end: 0 },
-      blendMode: "NORMAL",
-      lifespan: 4000,
-      gravityX: -10,
-      gravityY: 30,
-      emitZone: { source: new Phaser.Geom.Rectangle(0, 0, 800, 500) },
-    });
-  }
-
-  create() {
     this.gameSettings = {
       ui: {
         death: document.getElementById("death"),
@@ -60,6 +41,69 @@ export default class MainScene extends Phaser.Scene {
       },
     };
 
+    this.load.audio("ground", "../audio/ground.mp3")
+    this.load.audio("wind", "../audio/wind.mp3")
+    this.load.audio("mine", "../audio/mine.mp3")
+    this.load.audio("bomb", "../audio/bomb.mp3")
+    this.load.audio("item", "../audio/item.mp3")
+
+    this.load.image("title", "../img/title.png");
+    this.load.image("snowflake", "../img/snowflake.png");
+    this.load.image("nl", "../img/nl.png");
+    this.load.image("nlp", "../img/nlp.png");
+
+    this.load.image("bg", "../img/bg.png")
+    this.load.image("tiles", "../img/minetileset-extruded.png");
+    this.load.image("smoke", "../img/smoke.png");
+    this.load.spritesheet("characters", "../img/gubbe2.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+      margin: 0,
+      spacing: 0,
+    });
+
+    this.load.spritesheet("bomb", "../img/bomb.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+      margin: 0,
+      spacing: 0,
+    });
+
+    this.load.spritesheet("axe", "../img/yxa.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+      margin: 0,
+      spacing: 0,
+    });
+
+    this.gameSettings.ui.title.innerHTML = `<div  style="margin-top: -85px; font-size: 40px; color: rgba(255,255,255,0.8)">Något sover<br />&nbsp;under Aitik</div>`
+
+  }
+
+  createSnow() {
+    const emitter = this.add.particles("snowflake").createEmitter({
+      angle: { min: 0, max: 360 },
+      scale: { start: 1, end: 0 },
+      alpha: { start: 0.7, end: 0 },
+      blendMode: "NORMAL",
+      lifespan: 6000,
+      gravityX: -50,
+      gravityY: 30,
+      emitZone: { source: new Phaser.Geom.Rectangle(0, 0, 800, 500) },
+    });
+  }
+
+  create() {
+    
+    this.groundMusic = this.sound.add("ground", {loop: true});
+    this.windSound = this.sound.add("wind", {loop: true, volume: 0.5});
+    this.mineMusic = this.sound.add("mine", {loop: true, volume: 0});
+    this.groundMusic.play();
+    this.windSound.play();
+    this.mineMusic.play();
+
+
+
     this.add.image(400, 300, "title");
 
     this.createSnow();
@@ -71,6 +115,9 @@ export default class MainScene extends Phaser.Scene {
     this.updateMenu();
 
     this.events.on("pause", () => {
+
+
+
       this.gameSettings.ui.menu.style.display = "none";
 
       this.gameSettings.ui.mine.style.display = "flex";
@@ -81,6 +128,28 @@ export default class MainScene extends Phaser.Scene {
     });
 
     this.events.on("resume", () => {
+
+      this.tweens.add({
+        targets: [this.groundMusic],
+        volume: { value: 1, duration: 5000 },
+        yoyo: false,
+        loop: 0,
+      });
+
+      this.tweens.add({
+        targets: [this.windSound],
+        volume: { value: 0.5, duration: 5000 },
+        yoyo: false,
+        loop: 0,
+      });
+
+      this.tweens.add({
+        targets: [this.mineMusic],
+        volume: { value: 0, duration: 3000 },
+        yoyo: false,
+        loop: 0,
+      });
+
       this.gameSettings.ui.menu.style.display = "flex";
       this.gameSettings.ui.mine.style.display = "none";
       this.gameSettings.ui.death.style.display = "none";
@@ -88,6 +157,15 @@ export default class MainScene extends Phaser.Scene {
 
       this.updateMenu();
     });
+
+    this.input.keyboard.on('keydown', () => {
+      this.startGame();
+    })
+  }
+
+  startGame() {
+    this.gameSettings.ui.title.style.display = 'none';
+    this.gameSettings.ui.menu.style.display = "flex";
   }
 
   setupMenu() {
@@ -165,6 +243,20 @@ export default class MainScene extends Phaser.Scene {
       this.gameSettings.ui.levelTextOverlay.style.display = "flex";
 
       this.previousTime = -1;
+
+      this.tweens.add({
+        targets: [this.groundMusic, this.windSound],
+        volume: { value: 0, duration: 5000 },
+        yoyo: false,
+        loop: 0,
+      });
+
+      this.tweens.add({
+        targets: [this.mineMusic],
+        volume: { value: 1, duration: 5000 },
+        yoyo: false,
+        loop: 0,
+      });
 
       this.levelCountdown = this.time.addEvent({
         delay: 5000,

@@ -283,7 +283,7 @@ export default class Level {
       rooms: {
         width: { min: 6, max: 13 },
         height: { min: 6, max: 13 },
-        maxRooms: 5,
+        maxRooms: 20,
       },
     });
 
