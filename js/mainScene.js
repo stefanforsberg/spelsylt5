@@ -1,5 +1,21 @@
 import Phaser from "phaser";
 import GroundMp3 from "../dist/audio/ground.mp3"
+import WindMp3 from "../dist/audio/wind.mp3";
+import MineMp3 from "../dist/audio/mine.mp3";
+import Mine2Mp3 from "../dist/audio/mine2.mp3";
+import BombMp3 from "../dist/audio/bomb.mp3";
+import ItemMp3 from "../dist/audio/item.mp3";
+
+import title from "../dist/img/title.png";
+import snowflake from "../dist/img/snowflake.png";
+import nl from "../dist/img/nl.png";
+import nlp from "../dist/img/nlp.png";
+
+import bg from "../dist/img/bg.png";
+import tiles from "../dist/img/minetileset-extruded.png";
+import smoke from "../dist/img/smoke.png";
+import gubbe2 from "../dist/img/gubbe2.png";
+
 
 /**
  * Scene that generates a new dungeon
@@ -51,28 +67,31 @@ export default class MainScene extends Phaser.Scene {
     }
 
     this.load.audio("ground", GroundMp3);
-    this.load.audio("wind", "../audio/wind.mp3");
-    this.load.audio("mine", "../audio/mine.mp3");
-    this.load.audio("mine2", "../audio/mine2.mp3");
-    this.load.audio("bomb", "../audio/bomb.mp3");
-    this.load.audio("item", "../audio/item.mp3");
+    this.load.audio("wind", WindMp3);
+    this.load.audio("mine", MineMp3);
+    this.load.audio("mine2", Mine2Mp3);
+    this.load.audio("bomb", BombMp3);
+    this.load.audio("item", ItemMp3);
 
-    this.load.image("title", "../img/title.png");
-    this.load.image("snowflake", "../img/snowflake.png");
-    this.load.image("nl", "../img/nl.png");
-    this.load.image("nlp", "../img/nlp.png");
+    this.load.image("title", title);
+    this.load.image("snowflake", snowflake);
+    this.load.image("nl", nl);
+    this.load.image("nlp", nlp);
 
-    this.load.image("bg", "../img/bg.png");
-    this.load.image("tiles", "../img/minetileset-extruded.png");
-    this.load.image("smoke", "../img/smoke.png");
-    this.load.spritesheet("characters", "../img/gubbe2.png", {
+    this.load.image("bg", bg);
+    this.load.image("tiles", tiles);
+    this.load.image("smoke", smoke);
+
+    console.log(gubbe2)
+
+    this.load.spritesheet("characters", "./" + gubbe2, {
       frameWidth: 16,
       frameHeight: 16,
       margin: 0,
       spacing: 0,
     });
 
-    this.load.spritesheet("bomb", "../img/bomb.png", {
+    this.load.spritesheet("bomb", "./" + bomb, {
       frameWidth: 16,
       frameHeight: 16,
       margin: 0,
