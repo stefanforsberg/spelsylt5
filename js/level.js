@@ -107,6 +107,7 @@ export default class Level {
 
       cam.fade(700, 0, 0, 0);
       cam.once("camerafadeoutcomplete", () => {
+        this.scene.scene.pause();
         this.scene.gameSettings.ui.mine.style.display = 'none';
         document.getElementById("end").style.display = 'flex';
       });
@@ -380,7 +381,7 @@ export default class Level {
     const room = this.dungeon.rooms.shift()
 
     this.groundLayer.weightedRandomize(room.x + 1, room.y + 1, room.width - 2, room.height - 2, [
-      { index: [10], weight: 7 },
+      { index: [0], weight: 7 },
     ]);
 
     this.symbolsLayer.putTileAt(82, room.x+1, room.y+1);
