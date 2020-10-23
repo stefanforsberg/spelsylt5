@@ -26,4 +26,4 @@ var t;!function(o,n){"object"==typeof exports&&"object"==typeof module?module.ex
 },{"phaser":"vWcT","./level.js":"LwQx"}],"QvaY":[function(require,module,exports) {
 "use strict";var e=t(require("phaser")),a=t(require("./mainScene.js")),r=t(require("./mineScene.js"));function t(e){return e&&e.__esModule?e:{default:e}}var u={type:e.default.AUTO,width:800,height:600,backgroundColor:"#000",parent:"game",pixelArt:!0,scene:[a.default,r.default],physics:{default:"arcade",arcade:{gravity:{y:0},debug:!1}}},d=new e.default.Game(u);
 },{"phaser":"vWcT","./mainScene.js":"FLov","./mineScene.js":"trNU"}]},{},["QvaY"], null)
-//# sourceMappingURL=spelsylt5/prod/js.32b122d8.js.map
+//# sourceMappingURL=spelsylt5/js.32b122d8.js.map
