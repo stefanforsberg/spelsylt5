@@ -15,6 +15,7 @@ export default class Player {
         bomb: this.scene.gameSettings.inventory.bomb,
         speed: this.scene.gameSettings.inventory.speed,
         oxygen: this.scene.gameSettings.inventory.oxygen,
+        diamonddrill: this.scene.gameSettings.inventory.diamonddrill
       }
   
       const anims = scene.anims;

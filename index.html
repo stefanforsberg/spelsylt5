@@ -149,41 +149,56 @@
 
 				<div style="background: rgb(0,0,0); background: linear-gradient(180deg, rgba(0,0,0,0.3617822128851541) 0%, rgba(0,0,0,1) 100%); width: 740px; height: 500px; padding: 10px 20px; font-size: 14px; line-height: 23px; margin-top: 40px;">
 					
-					<h4 style="text-align: center;">INVENTORY</h4>
+					<div id="inventoryCraftingContainer" style="display: none">
+						<h4 style="text-align: center;">INVENTORY</h4>
 
-					<div>
-						<span><img src="dist/img/cloudberry.png" class="pixelImage"> Cloudberry</span> <span id="inv-cloudberry" class="inv">0</span><br>
-						<span><img src="dist/img/iron.png" class="pixelImage"> Iron</span> <span id="inv-iron" class="inv">0</span><br>
-						<span><img src="dist/img/redstone.png" class="pixelImage"> Red stone</span> <span id="inv-red" class="inv">0</span><br>
-						<span><img src="dist/img/yellowstone.png" class="pixelImage"> Yellow stone</span> <span id="inv-yellow" class="inv">0</span><br>
-						<span><img src="dist/img/bluestone.png" class="pixelImage"> Blue stone</span> <span id="inv-blue" class="inv">0</span><br>
-						<span><img src="dist/img/diamond.png" class="pixelImage"> Diamond</span> <span id="inv-diamond" class="inv">0</span><br>
-						<span>Bomb (spacebar to place)</span> <span id="inv-bomb" class="inv">0</span><br>
-						<span>Diamond drill</span> <span id="inv-diamond-drill" class="inv">0</span>
+						<div>
+							<span><img src="dist/img/cloudberry.png" class="pixelImage"> Cloudberry</span> <span id="inv-cloudberry" class="inv">0</span><br>
+							<span><img src="dist/img/iron.png" class="pixelImage"> Iron</span> <span id="inv-iron" class="inv">0</span><br>
+							<span><img src="dist/img/redstone.png" class="pixelImage"> Red stone</span> <span id="inv-red" class="inv">0</span><br>
+							<span><img src="dist/img/yellowstone.png" class="pixelImage"> Yellow stone</span> <span id="inv-yellow" class="inv">0</span><br>
+							<span><img src="dist/img/bluestone.png" class="pixelImage"> Blue stone</span> <span id="inv-blue" class="inv">0</span><br>
+							<span><img src="dist/img/diamond.png" class="pixelImage"> Diamond</span> <span id="inv-diamond" class="inv">0</span><br>
+							<span>Bomb (spacebar to place)</span> <span id="inv-bomb" class="inv">0</span><br>
+							<span>Diamond drill</span> <span id="inv-diamonddrill" class="inv">0</span>
+						</div>
+						
+						<hr>
+
+						<h4 style="text-align: center;">CRAFTING</h4>
+
+						<div>
+							<span>Bomb</span> <span class="inv"><img src="dist/img/iron.png" class="pixelImage">*10 <a href="#" id="craftBomb">[+]</a></span><br>
+							<span id="inv-oxygen">Oxygen 60 sec</span> <span class="inv"><img src="dist/img/redstone.png" class="pixelImage">*3 <img src="dist/img/yellowstone.png" class="pixelImage">*3 <img src="dist/img/bluestone.png" class="pixelImage">*3 <a href="#" id="craftOxygen">[+]</a></span><br>
+							<span id="inv-speed">Speed 3</span> <span class="inv"><img src="dist/img/iron.png" class="pixelImage">*3 <img src="dist/img/cloudberry.png" class="pixelImage">*5 <a href="#" id="craftSpeed">[+]</a></span><br>
+							<span>Diamond drill</span> <span class="inv"><img src="dist/img/diamond.png" class="pixelImage">*5 <a href="#" id="craftDiamondDrill">[+]</a></span><br>
+						</div>
+
 					</div>
-					
-					<hr>
 
-					<h4 style="text-align: center;">CRAFTING</h4>
+					<div id="firstTimeContainer" style="display: block">
+						<h4 style="text-align: center;">WELCOME TO AITIK</h4>
 
-					<div>
-						<span>Bomb</span> <span class="inv"><img src="dist/img/iron.png" class="pixelImage">*10 <a href="#" id="craftBomb">[+]</a></span><br>
-						<span id="inv-oxygen">Oxygen 60 sec</span> <span class="inv"><img src="dist/img/redstone.png" class="pixelImage">*3 <img src="dist/img/yellowstone.png" class="pixelImage">*3 <img src="dist/img/bluestone.png" class="pixelImage">*3 <a href="#" id="craftOxygen">[+]</a></span><br>
-						<span id="inv-speed">Speed 3</span> <span class="inv"><img src="dist/img/iron.png" class="pixelImage">*3 <img src="dist/img/cloudberry.png" class="pixelImage">*5 <a href="#" id="craftSpeed">[+]</a></span><br>
-						<span>Diamond drill</span> <span class="inv"><img src="dist/img/diamond.png" class="pixelImage">*5 <a href="#" id="craftDiamondDrill">[+]</a></span><br>
+						Controll your miner with the arrow keys. In the mines you can gather various materials which you can use to craft upgrade. To descend into the mines you select a desiered depth below (click the depth number). We suggest you start with depth 100 and when you return you can have a look at crafting upgrades. Good luck!<br><br>
+						// Aitik Mining CO
 					</div>
 					
 					<hr>
 
 					<div style="text-align: center;">
 						<h3>DESCEND THE MINE</h3>
-						<select id="levelSelect">
-							<option value="1">Depth 100</option>
-							<option value="2">Depth 200</option>
-							<option value="3">Depth 300</option>
-						</select>
-	
-						<button id="go">GO</button>
+
+						<div id="depths">
+							
+							Select depth
+							<button class="goDepth" data-level="1">100</button>
+							<button class="goDepth" data-level="2">200</button>
+							<button class="goDepth" data-level="3">300</button>
+							<button class="goDepth" data-level="4" id="depth4" style="display: none;">400</button>
+							<button class="goDepth" data-level="5" id="depth5" style="display: none;">500</button>
+
+						</div>
+						
 					</div>
 	
 				</div>
@@ -223,7 +238,7 @@
 				
 				<div style="width: 80%">
 					You managed to get out in time! Use your gathered material wisely and return to the mines soon!<br><br>
-					(Press any key to try again)
+					(Press any key to continue)
 				</div>
 			</div>
 		</div>

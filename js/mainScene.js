@@ -69,13 +69,6 @@ export default class MainScene extends Phaser.Scene {
       spacing: 0,
     });
 
-    this.load.spritesheet("axe", "../img/yxa.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-      margin: 0,
-      spacing: 0,
-    });
-
     this.gameSettings.ui.title.innerHTML = `<div  style="margin-top: -85px; font-size: 40px; color: rgba(255,255,255,0.8)">Något sover<br />&nbsp;under Aitik</div>`
 
   }
@@ -128,6 +121,8 @@ export default class MainScene extends Phaser.Scene {
     });
 
     this.events.on("resume", () => {
+
+      
 
       this.tweens.add({
         targets: [this.groundMusic],
@@ -197,76 +192,78 @@ export default class MainScene extends Phaser.Scene {
     });
 
     document.getElementById("craftDiamondDrill").addEventListener("click", () => {
+      
       if (this.gameSettings.inventory.diamond >= 5 && this.gameSettings.inventory.diamonddrill === 0) {
+
+        console.log("asd")
+
         this.gameSettings.inventory.diamonddrill = 1;
         this.gameSettings.inventory.diamond = this.gameSettings.inventory.diamond - 5;
 
-        let o = document.createElement("option");
-        o.text = "Depth 400";
-        o.value = 4;
-
-        this.gameSettings.ui.levelSelect.add(o);
-
-        o = document.createElement("option");
-        o.text = "Depth 500";
-        o.value = 5;
-
-        this.gameSettings.ui.levelSelect.add(o);
+        document.getElementById("depth4").style.display = "inline"
+        document.getElementById("depth5").style.display = "inline"
 
         this.updateMenu();
       }
     });
 
-    this.gameSettings.ui.go.addEventListener("click", () => {
-      this.gameSettings.level = this.gameSettings.ui.levelSelect.options[this.gameSettings.ui.levelSelect.selectedIndex].value;
+    Array.prototype.forEach.call(document.getElementsByClassName("goDepth"), (e) => {
+      
+      e.addEventListener("click", () => {
+        
+        this.gameSettings.level = e.dataset.level;
+        
+        switch (this.gameSettings.level) {
+          case "1":
+            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 100</h3> A good place to collect Iron <img src="img/iron.png" class="pixelImage"> and cloudberries <img src="img/cloudberry.png" class="pixelImage">. Make sure you get back to the lift <img src="img/elevator.png" class="pixelImage"> before the oxygen timer runs out. Good luck!`;
+            break;
+          case "2":
+            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 200</h3> If you have bought bombs you can blow up hard rocks <img src="img/stoneRock.png" class="pixelImage"> and collect their red, green and blue stones.`;
+            break;
+          case "3":
+            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 300</h3> Bombs are needed to navigate here. At this depth you can find diamond <img src="img/diamond.png" class="pixelImage"> which are needed to build the diamond drill and going below 300 depth.`;
+            break;
+          case "4":
+            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 400</h3> Maybe we weren't supposed to mine this deep... n'gha'agl`;
+            break;
+          case "5":
+            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 500</h3> What are those symbols? Didn't I see something similar on the level above? Hnahr'luhh ah ch'nglui`;
+            break;
+        }
+  
+        this.gameSettings.ui.menu.style.display = "none";
+        this.gameSettings.ui.title.style.display = "none";
+        this.gameSettings.ui.levelTextOverlay.style.display = "flex";
 
-      switch (this.gameSettings.level) {
-        case "1":
-          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 100</h3> A good place to collect Iron <img src="img/iron.png" class="pixelImage"> and cloudberries <img src="img/cloudberry.png" class="pixelImage">. Make sure you get back to the lift <img src="img/elevator.png" class="pixelImage"> before the oxygen timer runs out. Good luck!`;
-          break;
-        case "2":
-          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 200</h3> If you have bought bombs you can blow up hard rocks <img src="img/stoneRock.png" class="pixelImage"> and collect their red, green and blue stones.`;
-          break;
-        case "3":
-          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 300</h3> Bombs are needed to navigate here. At this depth you can find diamond <img src="img/diamond.png" class="pixelImage"> which are needed to build the diamond drill and going below 300 depth.`;
-          break;
-        case "4":
-          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 400</h3> Maybe we weren't supposed to mine this deep... n'gha'agl`;
-          break;
-        case "5":
-          this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 500</h3> What are those symbols? Didn't I see something similar on the level above? Hnahr'luhh ah ch'nglui`;
-          break;
-      }
-
-      this.gameSettings.ui.menu.style.display = "none";
-      this.gameSettings.ui.title.style.display = "none";
-      this.gameSettings.ui.levelTextOverlay.style.display = "flex";
-
-      this.previousTime = -1;
-
-      this.tweens.add({
-        targets: [this.groundMusic, this.windSound],
-        volume: { value: 0, duration: 5000 },
-        yoyo: false,
-        loop: 0,
-      });
-
-      this.tweens.add({
-        targets: [this.mineMusic],
-        volume: { value: 1, duration: 5000 },
-        yoyo: false,
-        loop: 0,
-      });
-
-      this.levelCountdown = this.time.addEvent({
-        delay: 5000,
-        callback: () => {
-          this.scene.pause();
-          this.scene.launch("MineScene", this.gameSettings);
-        },
-        callbackScope: this,
-        loop: false,
-      });
+        document.getElementById("firstTimeContainer").style.display = 'none';
+        document.getElementById("inventoryCraftingContainer").style.display = 'block';
+  
+        this.previousTime = -1;
+  
+        this.tweens.add({
+          targets: [this.groundMusic, this.windSound],
+          volume: { value: 0, duration: 5000 },
+          yoyo: false,
+          loop: 0,
+        });
+  
+        this.tweens.add({
+          targets: [this.mineMusic],
+          volume: { value: 1, duration: 5000 },
+          yoyo: false,
+          loop: 0,
+        });
+  
+        this.levelCountdown = this.time.addEvent({
+          delay: 5000,
+          callback: () => {
+            this.scene.pause();
+            this.scene.launch("MineScene", this.gameSettings);
+          },
+          callbackScope: this,
+          loop: false,
+        });
+      })
     });
   }
 

@@ -33,7 +33,7 @@ export default class Bomb {
     
     destroy() {
 
-      this.scene.sound.play("bomb", {volume: 0.3})
+      this.scene.sound.play("bomb", {volume: 0.7})
 
       this.scene.level.explodingBomb({x: this.sprite.x, y: this.sprite.y});
 
