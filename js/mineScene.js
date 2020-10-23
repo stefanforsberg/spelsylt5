@@ -15,29 +15,7 @@ export default class MineScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("bg", "../img/bg.png")
-    this.load.image("tiles", "../img/minetileset-extruded.png");
-    this.load.image("smoke", "../img/smoke.png");
-    this.load.spritesheet("characters", "../img/gubbe2.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-      margin: 0,
-      spacing: 0,
-    });
-
-    this.load.spritesheet("bomb", "../img/bomb.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-      margin: 0,
-      spacing: 0,
-    });
-
-    this.load.spritesheet("axe", "../img/yxa.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-      margin: 0,
-      spacing: 0,
-    });
+   
 
     
 
@@ -69,6 +47,9 @@ export default class MineScene extends Phaser.Scene {
     if(this.levelEnded) {
       return;
     }
+
+    const mainScene = this.scene.get("MainScene");
+    mainScene.gameSettings.inventory.bomb = this.level.player.inventory.bomb
 
     this.levelEnded = true;
 

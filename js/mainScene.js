@@ -11,7 +11,6 @@ export default class MainScene extends Phaser.Scene {
   }
 
   preload() {
-
     this.gameSettings = {
       ui: {
         death: document.getElementById("death"),
@@ -26,33 +25,43 @@ export default class MainScene extends Phaser.Scene {
         success: document.getElementById("success"),
         bomb: document.getElementById("bomb"),
         oxygen: document.getElementById("oxygen"),
-      },
-      inventory: {
-        cloudberry: 100,
-        iron: 100,
-        red: 9,
-        yellow: 9,
-        blue: 9,
-        diamond: 5,
-        bomb: 100,
+      }
+    };
+
+    const savedInventory = window.localStorage.getItem("spelsylt5-inventory");
+
+    if (savedInventory) {
+      this.gameSettings.inventory = JSON.parse(savedInventory);
+      document.getElementById("firstTimeContainer").style.display = "none";
+      document.getElementById("inventoryCraftingContainer").style.display = "block";
+    } else {
+      this.gameSettings.inventory = {
+        cloudberry: 0,
+        iron: 0,
+        red: 0,
+        yellow: 0,
+        blue: 0,
+        diamond: 0,
+        bomb: 0,
         speed: 75,
         oxygen: 30,
         diamonddrill: 0,
-      },
-    };
+      };
+    }
 
-    this.load.audio("ground", "../audio/ground.mp3")
-    this.load.audio("wind", "../audio/wind.mp3")
-    this.load.audio("mine", "../audio/mine.mp3")
-    this.load.audio("bomb", "../audio/bomb.mp3")
-    this.load.audio("item", "../audio/item.mp3")
+    this.load.audio("ground", "../audio/ground.mp3");
+    this.load.audio("wind", "../audio/wind.mp3");
+    this.load.audio("mine", "../audio/mine.mp3");
+    this.load.audio("mine2", "../audio/mine2.mp3");
+    this.load.audio("bomb", "../audio/bomb.mp3");
+    this.load.audio("item", "../audio/item.mp3");
 
     this.load.image("title", "../img/title.png");
     this.load.image("snowflake", "../img/snowflake.png");
     this.load.image("nl", "../img/nl.png");
     this.load.image("nlp", "../img/nlp.png");
 
-    this.load.image("bg", "../img/bg.png")
+    this.load.image("bg", "../img/bg.png");
     this.load.image("tiles", "../img/minetileset-extruded.png");
     this.load.image("smoke", "../img/smoke.png");
     this.load.spritesheet("characters", "../img/gubbe2.png", {
@@ -69,8 +78,7 @@ export default class MainScene extends Phaser.Scene {
       spacing: 0,
     });
 
-    this.gameSettings.ui.title.innerHTML = `<div  style="margin-top: -85px; font-size: 40px; color: rgba(255,255,255,0.8)">Något sover<br />&nbsp;under Aitik</div>`
-
+    this.gameSettings.ui.title.innerHTML = `<div  style="margin-top: -85px; font-size: 40px; color: rgba(255,255,255,0.8)">Något sover<br />&nbsp;under Aitik</div>`;
   }
 
   createSnow() {
@@ -87,15 +95,15 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    
-    this.groundMusic = this.sound.add("ground", {loop: true});
-    this.windSound = this.sound.add("wind", {loop: true, volume: 0.5});
-    this.mineMusic = this.sound.add("mine", {loop: true, volume: 0});
+    this.groundMusic = this.sound.add("ground", { loop: true });
+    this.windSound = this.sound.add("wind", { loop: true, volume: 0.5 });
+    this.mineMusic1 = this.sound.add("mine", { loop: true, volume: 0 });
+    this.mineMusic2 = this.sound.add("mine2", { loop: true, volume: 0 });
+    this.mineMusic = this.mineMusic1;
     this.groundMusic.play();
     this.windSound.play();
     this.mineMusic.play();
-
-
+    this.mineMusic2.play();
 
     this.add.image(400, 300, "title");
 
@@ -108,9 +116,6 @@ export default class MainScene extends Phaser.Scene {
     this.updateMenu();
 
     this.events.on("pause", () => {
-
-
-
       this.gameSettings.ui.menu.style.display = "none";
 
       this.gameSettings.ui.mine.style.display = "flex";
@@ -121,9 +126,6 @@ export default class MainScene extends Phaser.Scene {
     });
 
     this.events.on("resume", () => {
-
-      
-
       this.tweens.add({
         targets: [this.groundMusic],
         volume: { value: 1, duration: 5000 },
@@ -153,13 +155,13 @@ export default class MainScene extends Phaser.Scene {
       this.updateMenu();
     });
 
-    this.input.keyboard.on('keydown', () => {
+    this.input.keyboard.on("keydown", () => {
       this.startGame();
-    })
+    });
   }
 
   startGame() {
-    this.gameSettings.ui.title.style.display = 'none';
+    this.gameSettings.ui.title.style.display = "none";
     this.gameSettings.ui.menu.style.display = "flex";
   }
 
@@ -192,27 +194,22 @@ export default class MainScene extends Phaser.Scene {
     });
 
     document.getElementById("craftDiamondDrill").addEventListener("click", () => {
-      
       if (this.gameSettings.inventory.diamond >= 5 && this.gameSettings.inventory.diamonddrill === 0) {
-
-        console.log("asd")
+        console.log("asd");
 
         this.gameSettings.inventory.diamonddrill = 1;
         this.gameSettings.inventory.diamond = this.gameSettings.inventory.diamond - 5;
-
-        document.getElementById("depth4").style.display = "inline"
-        document.getElementById("depth5").style.display = "inline"
 
         this.updateMenu();
       }
     });
 
     Array.prototype.forEach.call(document.getElementsByClassName("goDepth"), (e) => {
-      
       e.addEventListener("click", () => {
-        
         this.gameSettings.level = e.dataset.level;
-        
+
+        this.mineMusic = this.mineMusic1;
+
         switch (this.gameSettings.level) {
           case "1":
             this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 100</h3> A good place to collect Iron <img src="img/iron.png" class="pixelImage"> and cloudberries <img src="img/cloudberry.png" class="pixelImage">. Make sure you get back to the lift <img src="img/elevator.png" class="pixelImage"> before the oxygen timer runs out. Good luck!`;
@@ -227,33 +224,34 @@ export default class MainScene extends Phaser.Scene {
             this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 400</h3> Maybe we weren't supposed to mine this deep... n'gha'agl`;
             break;
           case "5":
+            this.mineMusic = this.mineMusic2;
             this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 500</h3> What are those symbols? Didn't I see something similar on the level above? Hnahr'luhh ah ch'nglui`;
             break;
         }
-  
+
         this.gameSettings.ui.menu.style.display = "none";
         this.gameSettings.ui.title.style.display = "none";
         this.gameSettings.ui.levelTextOverlay.style.display = "flex";
 
-        document.getElementById("firstTimeContainer").style.display = 'none';
-        document.getElementById("inventoryCraftingContainer").style.display = 'block';
-  
+        document.getElementById("firstTimeContainer").style.display = "none";
+        document.getElementById("inventoryCraftingContainer").style.display = "block";
+
         this.previousTime = -1;
-  
+
         this.tweens.add({
           targets: [this.groundMusic, this.windSound],
           volume: { value: 0, duration: 5000 },
           yoyo: false,
           loop: 0,
         });
-  
+
         this.tweens.add({
           targets: [this.mineMusic],
           volume: { value: 1, duration: 5000 },
           yoyo: false,
           loop: 0,
         });
-  
+
         this.levelCountdown = this.time.addEvent({
           delay: 5000,
           callback: () => {
@@ -263,7 +261,7 @@ export default class MainScene extends Phaser.Scene {
           callbackScope: this,
           loop: false,
         });
-      })
+      });
     });
   }
 
@@ -292,6 +290,14 @@ export default class MainScene extends Phaser.Scene {
         }
       }
     });
+
+    if(this.gameSettings.inventory.diamonddrill > 0) {
+      document.getElementById("depth4").style.display = "inline";
+      document.getElementById("depth5").style.display = "inline";
+    }
+    
+
+    window.localStorage.setItem("spelsylt5-inventory", JSON.stringify(this.gameSettings.inventory));
   }
 
   createNorthernLights() {

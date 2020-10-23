@@ -97,7 +97,19 @@ export default class Level {
     this.touchedSymbols.push(tile.index);
 
     if(this.touchedSymbols.join("") === "82838485") {
-      this.scene.cameras.main.shake(2000);
+      
+      
+      const cam = this.scene.cameras.main;
+
+      this.player.freeze();
+
+      cam.shake(700, 0.0005);
+
+      cam.fade(700, 0, 0, 0);
+      cam.once("camerafadeoutcomplete", () => {
+        this.scene.gameSettings.ui.mine.style.display = 'none';
+        document.getElementById("end").style.display = 'flex';
+      });
     }
   }
 
@@ -146,7 +158,7 @@ export default class Level {
       if (rand <= 0.5) {
         var tile = new Phaser.Tilemaps.Tile(this.gemLayer, 39, r.centerX, r.centerY);
         tile.properties.amount = Phaser.Math.Between(5, 10);
-        tile.properties.type = "Cloudberry";
+        tile.properties.type = "cloudberry";
 
         const x = Phaser.Math.Between(r.x+1, r.x+r.width-2);
         const y = Phaser.Math.Between(r.y+1, r.y+r.height-2);
