@@ -14,12 +14,14 @@ import nlp from "../dist/img/nlp.png";
 import bg from "../dist/img/bg.png";
 import tiles from "../dist/img/minetileset-extruded.png";
 import smoke from "../dist/img/smoke.png";
+import bomb from "../dist/img/bomb.png";
 import gubbe2 from "../dist/img/gubbe2.png";
+import iron from "../dist/img/iron.png";
+import cloudberry from "../dist/img/cloudberry.png";
+import elevator from "../dist/img/elevator.png";
+import stoneRock from "../dist/img/stoneRock.png";
+import diamond from "../dist/img/diamond.png";
 
-
-/**
- * Scene that generates a new dungeon
- */
 export default class MainScene extends Phaser.Scene {
   constructor() {
     super({
@@ -81,8 +83,6 @@ export default class MainScene extends Phaser.Scene {
     this.load.image("bg", bg);
     this.load.image("tiles", tiles);
     this.load.image("smoke", smoke);
-
-    console.log(gubbe2)
 
     this.load.spritesheet("characters", "./" + gubbe2, {
       frameWidth: 16,
@@ -215,7 +215,6 @@ export default class MainScene extends Phaser.Scene {
 
     document.getElementById("craftDiamondDrill").addEventListener("click", () => {
       if (this.gameSettings.inventory.diamond >= 5 && this.gameSettings.inventory.diamonddrill === 0) {
-        console.log("asd");
 
         this.gameSettings.inventory.diamonddrill = 1;
         this.gameSettings.inventory.diamond = this.gameSettings.inventory.diamond - 5;
@@ -232,13 +231,13 @@ export default class MainScene extends Phaser.Scene {
 
         switch (this.gameSettings.level) {
           case "1":
-            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 100</h3> A good place to collect Iron <img src="img/iron.png" class="pixelImage"> and cloudberries <img src="img/cloudberry.png" class="pixelImage">. Make sure you get back to the lift <img src="img/elevator.png" class="pixelImage"> before the oxygen timer runs out. Good luck!`;
+            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 100</h3> A good place to collect Iron <img src="${iron}" class="pixelImage"> and cloudberries <img src="${cloudberry}" class="pixelImage">. Make sure you get back to the lift <img src="${elevator}" class="pixelImage"> before the oxygen timer runs out. Good luck!`;
             break;
           case "2":
-            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 200</h3> If you have bought bombs you can blow up hard rocks <img src="img/stoneRock.png" class="pixelImage"> and collect their red, green and blue stones.`;
+            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 200</h3> If you have bought bombs you can blow up hard rocks <img src="${stoneRock}" class="pixelImage"> and collect their red, green and blue stones.`;
             break;
           case "3":
-            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 300</h3> Bombs are needed to navigate here. At this depth you can find diamond <img src="img/diamond.png" class="pixelImage"> which are needed to build the diamond drill and going below 300 depth.`;
+            this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 300</h3> Bombs are needed to navigate here. At this depth you can find diamond <img src="${diamond}" class="pixelImage"> which are needed to build the diamond drill and going below 300 depth.`;
             break;
           case "4":
             this.gameSettings.ui.levelText.innerHTML = `<h3>DEPTH 400</h3> Maybe we weren't supposed to mine this deep... n'gha'agl`;
@@ -290,7 +289,6 @@ export default class MainScene extends Phaser.Scene {
       const currentTime = Math.floor(this.levelCountdown.getElapsedSeconds());
 
       if (currentTime > this.previousTime) {
-        console.log(currentTime);
         this.previousTime = currentTime;
         this.gameSettings.ui.levelCountdown.innerText = `${5 - currentTime}`;
       }

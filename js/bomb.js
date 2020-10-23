@@ -1,8 +1,3 @@
-/**
- * A class that wraps up our top down player logic. It creates, animates and moves a sprite in
- * response to WASD keys. Call its update method from the scene's update and call its destroy
- * method when you're done with the player.
- */
 export default class Bomb {
     constructor(scene, x, y) {
       this.scene = scene;

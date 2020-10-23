@@ -1,4 +1,3 @@
-import Axe from "./axe.js";
 import Bomb from "./bomb.js";
 
 export default class Player {

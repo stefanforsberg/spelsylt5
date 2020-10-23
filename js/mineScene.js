@@ -22,7 +22,6 @@ export default class MineScene extends Phaser.Scene {
   }
 
   create(gameSettings) {
-    console.log("creating")
     this.gameSettings = gameSettings;
 
     this.level = new Level().create(this);
@@ -72,8 +71,6 @@ export default class MineScene extends Phaser.Scene {
       })
      
     });
-    
-    console.log("end level")
   }
 
   update(time, delta) {
