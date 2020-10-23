@@ -187,9 +187,9 @@ export default class MainScene extends Phaser.Scene {
 
   setupMenu() {
     document.getElementById("craftBomb").addEventListener("click", () => {
-      if (this.gameSettings.inventory.iron >= 10) {
+      if (this.gameSettings.inventory.iron >= 5) {
         this.gameSettings.inventory.bomb = this.gameSettings.inventory.bomb + 1;
-        this.gameSettings.inventory.iron = this.gameSettings.inventory.iron - 10;
+        this.gameSettings.inventory.iron = this.gameSettings.inventory.iron - 5;
         this.updateMenu();
       }
     });
