@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import GroundMp3 from "../dist/audio/ground.mp3"
 
 /**
  * Scene that generates a new dungeon
@@ -49,7 +50,7 @@ export default class MainScene extends Phaser.Scene {
       };
     }
 
-    this.load.audio("ground", "../audio/ground.mp3");
+    this.load.audio("ground", GroundMp3);
     this.load.audio("wind", "../audio/wind.mp3");
     this.load.audio("mine", "../audio/mine.mp3");
     this.load.audio("mine2", "../audio/mine2.mp3");
